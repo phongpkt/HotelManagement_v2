@@ -1,6 +1,8 @@
 package com.example.HotelManagement.controller;
 
 import com.example.HotelManagement.model.Room;
+import com.example.HotelManagement.model.dto.roomDTO;
+import com.example.HotelManagement.model.dto.roomStatusRequest;
 import com.example.HotelManagement.model.exceptions.ResponseObject;
 import com.example.HotelManagement.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,13 +68,13 @@ public class RoomController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully inserted resource",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Room.class)), }),
+                            schema = @Schema(implementation = roomDTO.class)), }),
             @ApiResponse(responseCode = "500", description = "Invalid Request - Please check your input",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ResponseObject.class)) })
     })
     @PostMapping("/insert")
-    public ResponseEntity<ResponseObject> save(@RequestBody Room newRoom) {
+    public ResponseEntity<ResponseObject> save(@RequestBody roomDTO newRoom) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "successfully", roomService.save(newRoom))
@@ -93,10 +95,22 @@ public class RoomController {
                             schema = @Schema(implementation = ResponseObject.class)) })
     })
     @PutMapping("/update/{id}")
-    public ResponseEntity<ResponseObject> update(@RequestBody Room newRoom, @PathVariable Long id) {
+    public ResponseEntity<ResponseObject> update(@RequestBody roomDTO newRoom, @PathVariable Long id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "successfully", roomService.update(newRoom, id))
+            );
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new ResponseObject("error", "An error occurred while updating - Please check your input", "")
+            );
+        }
+    }
+    @PatchMapping("/update/status/{id}")
+    public ResponseEntity<ResponseObject> update(@RequestBody roomStatusRequest status, @PathVariable Long id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", roomService.updateRoomStatus(id, status.getStatus()))
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

@@ -1,5 +1,7 @@
 package com.example.HotelManagement.model;
 
+import com.example.HotelManagement.model.enums.RoomStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,8 +27,9 @@ public class Room {
     @ManyToOne
     @JoinColumn(name="type_id", nullable=false)
     private RoomType type;
-    @Column(name = "status") //Available, Not Available
-    private String Status;
+    @Column(name = "status")
+    private RoomStatus Status;
     @OneToMany(mappedBy = "room")
+    @JsonIgnore
     private List<Booking> bookings;
 }

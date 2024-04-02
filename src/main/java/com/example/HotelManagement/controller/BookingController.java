@@ -1,6 +1,7 @@
 package com.example.HotelManagement.controller;
 
 import com.example.HotelManagement.model.Booking;
+import com.example.HotelManagement.model.dto.bookingDTO;
 import com.example.HotelManagement.model.exceptions.ResponseObject;
 import com.example.HotelManagement.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,7 @@ import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -23,7 +25,7 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
-    @Operation(summary = "Gets data by ID")
+    @Operation(summary = "Get a book by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
                     content = { @Content(mediaType = "application/json",
@@ -46,7 +48,7 @@ public class BookingController {
             );
         }
     }
-    @Operation(summary = "Gets all book")
+    @Operation(summary = "Gets all bookings")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
                     content = { @Content(mediaType = "application/json",
@@ -63,24 +65,24 @@ public class BookingController {
         }
         return new ResponseEntity<>(bookingList, HttpStatus.OK);
     }
-    @Operation(summary = "Insert new book")
+    @Operation(summary = "Book a room")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully inserted resource",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Booking.class)), }),
-            @ApiResponse(responseCode = "500", description = "Invalid Request - Please check your input",
+                            schema = @Schema(implementation = bookingDTO.class)), }),
+            @ApiResponse(responseCode = "500", description = "Cannot book this room",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ResponseObject.class)) })
     })
-    @PostMapping("/insert")
-    public ResponseEntity<ResponseObject> save(@RequestBody Booking newBooking) {
+    @PostMapping("/book")
+    public ResponseEntity<ResponseObject> book_room(@RequestBody bookingDTO newBooking) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "successfully", bookingService.save(newBooking))
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new ResponseObject("error", "An error occurred while saving", "")
+                    new ResponseObject("error", "Cannot book this room", "")
             );
         }
     }

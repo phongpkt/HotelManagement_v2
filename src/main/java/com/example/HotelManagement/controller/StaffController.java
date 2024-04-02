@@ -82,7 +82,7 @@ public class StaffController {
                 );
             } catch (Exception e){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        new ResponseObject("error", "An error occurred while saving", "")
+                        new ResponseObject("error", "Please check your input - Maybe the hotel doesn't exist", "")
                 );
             }
         }

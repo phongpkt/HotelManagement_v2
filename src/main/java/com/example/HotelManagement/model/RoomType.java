@@ -24,7 +24,7 @@ public class RoomType {
     private String name;
     @Column(name = "description")
     private String description;
-    @Column(name = "price")
+    @Column(name = "pricePerNight")
     private double pricePerNight;
     @Column(name = "capacity")
     private int capacity;
