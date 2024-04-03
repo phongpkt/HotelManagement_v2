@@ -119,7 +119,7 @@ public class StaffController {
             @ApiResponse(responseCode = "404", description = "Staff not exists",
                     content = { @Content(mediaType = "application/json")})
     })
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseObject> delete(@PathVariable Long id) {
         boolean deleted = staffService.delete(id);
         if(deleted) {

@@ -96,7 +96,7 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "Data not exists",
                     content = { @Content(mediaType = "application/json")})
     })
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseObject> delete(@PathVariable Long id) {
         boolean deleted = paymentService.delete(id);
         if (deleted) {

@@ -120,7 +120,7 @@ public class HotelController {
             @ApiResponse(responseCode = "404", description = "Hotel not exists",
                     content = { @Content(mediaType = "application/json")})
     })
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseObject> delete(@PathVariable Long id) {
         boolean deleted = hotelService.delete(id);
         if(deleted) {

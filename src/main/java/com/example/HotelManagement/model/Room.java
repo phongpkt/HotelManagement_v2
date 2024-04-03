@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -16,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Room")
-public class Room {
+public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "room_id")
@@ -28,6 +30,7 @@ public class Room {
     @JoinColumn(name="type_id", nullable=false)
     private RoomType type;
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private RoomStatus Status;
     @OneToMany(mappedBy = "room")
     @JsonIgnore

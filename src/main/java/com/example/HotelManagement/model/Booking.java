@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.util.Date;
 import java.util.List;
@@ -22,9 +23,6 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
     private long id;
-    @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false)
-    private Room room;
     @Column(name = "checkInDate")
     private Date checkInDate;
     @Column(name = "checkOutDate")
@@ -32,8 +30,16 @@ public class Booking {
     @Column(name = "totalPrice")
     private double totalPrice;
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
+
     @OneToMany(mappedBy = "booking")
     @JsonIgnore
     private List<Payment> payments;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "guest_id")
+    private Guest guest;
+    @ManyToOne
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 }

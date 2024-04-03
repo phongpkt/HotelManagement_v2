@@ -15,6 +15,6 @@ import lombok.Setter;
 public class roomDTO {
     private long hotel_id;
     private long type_id;
-    private RoomStatus Status;
+    private String Status;
 
 }

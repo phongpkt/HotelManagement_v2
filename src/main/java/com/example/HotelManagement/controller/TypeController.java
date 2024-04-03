@@ -119,7 +119,7 @@ public class TypeController {
             @ApiResponse(responseCode = "404", description = "Room type not exists",
                     content = { @Content(mediaType = "application/json")})
     })
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseObject> delete(@PathVariable Long id) {
         boolean deleted = typeService.delete(id);
         if (deleted) {
