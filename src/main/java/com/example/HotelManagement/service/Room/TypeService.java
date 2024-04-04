@@ -1,4 +1,4 @@
-package com.example.HotelManagement.service;
+package com.example.HotelManagement.service.Room;
 
 import com.example.HotelManagement.model.RoomType;
 import com.example.HotelManagement.repository.TypeRepository;
@@ -24,10 +24,7 @@ public class TypeService {
     }
     public boolean findDuplicateRoomType(RoomType type){
         List<RoomType> foundType = typeRepository.findByName(type.getName().trim());
-        if(foundType.isEmpty()) {
-            return false;
-        }
-        return true;
+        return !foundType.isEmpty();
     }
     public RoomType update(RoomType newType, Long id){
         RoomType updatedType = typeRepository.findById(id).map(type -> {

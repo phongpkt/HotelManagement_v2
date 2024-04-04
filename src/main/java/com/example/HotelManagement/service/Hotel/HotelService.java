@@ -1,4 +1,4 @@
-package com.example.HotelManagement.service;
+package com.example.HotelManagement.service.Hotel;
 
 import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.repository.HotelRepository;
@@ -23,10 +23,7 @@ public class HotelService {
     }
     public boolean findDuplicateHotelName(Hotel hotel){
         List<Hotel> foundHotel = hotelRepository.findByName(hotel.getName().trim());
-        if(foundHotel.isEmpty()) {
-            return false;
-        }
-        return true;
+        return !foundHotel.isEmpty();
     }
     public Hotel update(Hotel newHotel, Long id){
         Hotel updatedHotel = hotelRepository.findById(id).map(hotel -> {

@@ -13,4 +13,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b JOIN b.guest g WHERE g.email = :email")
     List<Booking> findBookingByUserEmail(String email);
 
+    @Query("SELECT b FROM Booking b WHERE b.checkOutDate <= CURRENT_DATE AND b.status = 'booked'")
+    List<Booking> findByCheckOutDateBeforeAndStatus();
 }

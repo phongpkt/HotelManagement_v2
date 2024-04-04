@@ -1,16 +1,12 @@
-package com.example.HotelManagement.service;
+package com.example.HotelManagement.service.Room;
 
 import com.example.HotelManagement.model.Room;
-import com.example.HotelManagement.model.RoomType;
 import com.example.HotelManagement.model.dto.roomDTO;
-import com.example.HotelManagement.model.dto.roomTypeDTO;
 import com.example.HotelManagement.model.enums.RoomStatus;
 import com.example.HotelManagement.repository.RoomRepository;
+import com.example.HotelManagement.service.Hotel.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,10 +39,11 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    @Cacheable(value = "room")
     public Optional<Room> findById(Long id){
         return roomRepository.findById(id);
     }
+
+    @Cacheable(value = "roomList")
     public List<Room> findByRoomType(String roomType){
         return roomRepository.findRoomByType(roomType);
     }

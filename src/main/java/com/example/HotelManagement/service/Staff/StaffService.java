@@ -1,4 +1,4 @@
-package com.example.HotelManagement.service;
+package com.example.HotelManagement.service.Staff;
 
 import com.example.HotelManagement.model.Staff;
 import com.example.HotelManagement.repository.StaffRepository;
@@ -24,10 +24,7 @@ public class StaffService {
     }
     public boolean findDuplication(Staff staff){
         List<Staff> foundResource = staffRepository.findByEmail(staff.getEmail().trim());
-        if(foundResource.isEmpty()) {
-            return false;
-        }
-        return true;
+        return !foundResource.isEmpty();
     }
     public Staff update(Staff newStaff, Long id){
         Staff updatedStaff = staffRepository.findById(id).map(staff -> {

@@ -1,4 +1,4 @@
-package com.example.HotelManagement.service;
+package com.example.HotelManagement.service.Booking;
 
 import com.example.HotelManagement.model.Booking;
 import com.example.HotelManagement.model.Guest;
@@ -10,11 +10,9 @@ import com.example.HotelManagement.model.enums.BookingStatus;
 import com.example.HotelManagement.model.enums.RoomStatus;
 import com.example.HotelManagement.repository.BookingRepository;
 import com.example.HotelManagement.repository.GuestRepository;
+import com.example.HotelManagement.service.Room.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -97,6 +95,7 @@ public class BookingService {
         }
         return null;
     }
+
     public boolean delete(Long id) {
         boolean exists = bookingRepository.existsById(id);
         if(exists) {
@@ -105,6 +104,13 @@ public class BookingService {
             return true;
         }
         return false;
+    }
+
+    public void deleteBookingsByCheckOutDateAndStatus() {
+        List<Booking> bookings = bookingRepository.findByCheckOutDateBeforeAndStatus();
+        for (Booking booking : bookings) {
+            bookingRepository.delete(booking);
+        }
     }
 
     private BookingStatus getStatus(String status){

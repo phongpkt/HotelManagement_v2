@@ -2,7 +2,7 @@ package com.example.HotelManagement.controller;
 
 import com.example.HotelManagement.model.Staff;
 import com.example.HotelManagement.model.exceptions.ResponseObject;
-import com.example.HotelManagement.service.StaffService;
+import com.example.HotelManagement.service.Staff.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

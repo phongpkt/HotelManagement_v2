@@ -6,18 +6,18 @@ import com.example.HotelManagement.model.dto.guestBookingDTO;
 import com.example.HotelManagement.model.dto.guestEmailDTO;
 import com.example.HotelManagement.model.dto.statusRequest;
 import com.example.HotelManagement.model.exceptions.ResponseObject;
-import com.example.HotelManagement.service.BookingService;
+import com.example.HotelManagement.service.Booking.BookingService;
+import com.example.HotelManagement.service.Booking.EmailService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +29,8 @@ import java.util.Optional;
 public class BookingController {
     @Autowired
     private BookingService bookingService;
+    @Autowired
+    private EmailService emailService;
 
     @Operation(summary = "Get a book by ID")
     @ApiResponses(value = {
@@ -122,6 +124,7 @@ public class BookingController {
                         new ResponseObject("invalid", "The room is unavailable", "")
                 );
             }
+//            emailService.sendEmail(newBooking.getEmail(), book);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "successfully", book)
             );
@@ -201,5 +204,11 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("failed", "Cannot find data to delete", "")
         );
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?") // Chạy vào lúc 00:00:00 mỗi ngày
+    @Hidden
+    public void deleteByDateAndStatus() {
+        bookingService.deleteBookingsByCheckOutDateAndStatus();
     }
 }
