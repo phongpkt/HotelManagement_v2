@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS guest (
 );
 
 ALTER TABLE booking ADD COLUMN guest_id BIGINT;
-ALTER TABLE booking ADD FOREIGN KEY (guest_id) REFERENCES Guest(guest_id);
+ALTER TABLE booking ADD FOREIGN KEY (guest_id) REFERENCES guest(guest_id);
