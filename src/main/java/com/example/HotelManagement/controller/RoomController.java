@@ -105,7 +105,7 @@ public class RoomController {
             Room newRoomData = roomService.save(newRoom);
             if(newRoomData!=null){
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "successfully", roomService.save(newRoom))
+                        new ResponseObject("ok", "successfully", newRoomData)
                 );
             }else {
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
@@ -191,5 +191,23 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("failed", "Cannot find room to delete", "")
         );
+    }
+
+    @GetMapping("/find/test1/{status}")
+    public ResponseEntity<List<Room>> findByStatusCriteriaAPI(@PathVariable("status") String status) {
+        List<Room> roomList = roomService.findByRoomStatus(status);
+        if (roomList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(roomList, HttpStatus.OK);
+    }
+
+    @GetMapping("/find/test2/{status}/{hotel}")
+    public ResponseEntity<List<Room>> findByStatusSpecification(@PathVariable("status") String status) {
+        List<Room> roomList = roomService.findByRoomStatusSpecification(status);
+        if (roomList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(roomList, HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.HotelManagement.model;
 
+import com.example.HotelManagement.model.enums.StaffRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,4 +31,8 @@ public class Staff {
     private String email;
     @Column(name = "password")
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private StaffRole role;
 }

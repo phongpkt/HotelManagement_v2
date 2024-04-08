@@ -3,14 +3,23 @@ package com.example.HotelManagement.service.Room;
 import com.example.HotelManagement.model.Room;
 import com.example.HotelManagement.model.dto.roomDTO;
 import com.example.HotelManagement.model.enums.RoomStatus;
-import com.example.HotelManagement.repository.RoomRepository;
+import com.example.HotelManagement.repository.Room.RoomRepository;
 import com.example.HotelManagement.service.Hotel.HotelService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.HotelManagement.specifications.RoomSpecification.hasStatus;
 
 @Service
 public class RoomService {
@@ -20,10 +29,41 @@ public class RoomService {
     private HotelService hotelService;
     @Autowired
     private TypeService typeService;
+    @Autowired
+    private EntityManager entityManager;
 
     @Cacheable(value = "roomList")
     public List<Room> findAll(){
         return roomRepository.findAll();
+    }
+
+    public Optional<Room> findById(Long id) {
+        return roomRepository.findById(id);
+    }
+
+    @Cacheable(value = "roomList")
+    public List<Room> findByRoomType(String roomType) {
+        return roomRepository.findRoomByType(roomType);
+    }
+
+    public List<Room> findByRoomStatus(String status) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Room> cq = cb.createQuery(Room.class);
+        Root<Room> roomRoot = cq.from(Room.class);
+        Predicate statusPredicate = cb.equal(roomRoot.get("Status"), status);
+        cq.where(statusPredicate);
+        TypedQuery<Room> query = entityManager.createQuery(cq);
+        return query.getResultList();
+    }
+
+    public List<Room> findByRoomStatusSpecification(String statusString) {
+        RoomStatus status;
+        try {
+            status = RoomStatus.valueOf(statusString);
+        } catch (IllegalArgumentException ex) {
+            return Collections.emptyList();
+        }
+        return roomRepository.findAll(hasStatus(status));
     }
 
     public Room save(roomDTO newRoom){
@@ -38,16 +78,6 @@ public class RoomService {
         typeService.findById(newRoom.getType_id()).ifPresent(room::setType);
         return roomRepository.save(room);
     }
-
-    public Optional<Room> findById(Long id){
-        return roomRepository.findById(id);
-    }
-
-    @Cacheable(value = "roomList")
-    public List<Room> findByRoomType(String roomType){
-        return roomRepository.findRoomByType(roomType);
-    }
-
     public Room update(roomDTO newRoom, Long id) {
         return roomRepository.findById(id)
                 .map(room -> {

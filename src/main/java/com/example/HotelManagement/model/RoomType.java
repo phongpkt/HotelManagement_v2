@@ -28,7 +28,13 @@ public class RoomType {
     private double pricePerNight;
     @Column(name = "capacity")
     private int capacity;
+
+
     @OneToMany(mappedBy = "type")
     @JsonIgnore
     private List<Room> rooms;
+    @ElementCollection
+    @CollectionTable(name = "gallery", joinColumns = @JoinColumn(name = "type_id"))
+    @Column(name = "image_url")
+    private List<String> imageUrls;
 }

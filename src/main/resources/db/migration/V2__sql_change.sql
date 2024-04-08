@@ -1,8 +1,6 @@
-CREATE TABLE IF NOT EXISTS Payment (
-    payment_id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    booking_id BIGINT NOT NULL,
-    totalAmount DECIMAL(10, 2),
-    payment_date DATE,
-    payment_method VARCHAR(255),
-    FOREIGN KEY (booking_id) REFERENCES Booking(booking_id)
-);
+ALTER TABLE booking ADD COLUMN guest_id BIGINT;
+ALTER TABLE booking ADD FOREIGN KEY (guest_id) REFERENCES guest(guest_id);
+
+ALTER TABLE booking ADD COLUMN status VARCHAR(255);
+
+ALTER TABLE staff ADD COLUMN role varchar(255);
