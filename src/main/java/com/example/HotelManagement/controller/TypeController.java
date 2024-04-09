@@ -10,10 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +62,70 @@ public class TypeController {
     @GetMapping("/find")
     public ResponseEntity<List<RoomType>> findAll() {
         List<RoomType> typeList = typeService.findAll();
+        if (typeList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(typeList, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Gets room type by name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RoomType.class)),}),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/findByName")
+    public ResponseEntity<ResponseObject> findByName(@RequestParam("name") String name) {
+        Optional<RoomType> foundResource = typeService.findByName(name);
+        if (foundResource.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", foundResource)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "This " + name + " does not exits", "")
+            );
+        }
+    }
+
+    @Operation(summary = "Gets all room type with price lesser than")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RoomType.class)),}),
+            @ApiResponse(responseCode = "204", description = "No data"),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/findByPrice")
+    public ResponseEntity<List<RoomType>> findByPriceLessThan(@RequestParam("price") Double price) {
+        List<RoomType> typeList = typeService.findByPriceLessThan(price);
+        if (typeList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(typeList, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Gets all room type with capacity greater than")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RoomType.class)),}),
+            @ApiResponse(responseCode = "204", description = "No Data found",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RoomType.class)),}),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/findByCapacity")
+    public ResponseEntity<List<RoomType>> findByCapacityGreaterThan(@RequestParam("capacity") Integer capacity) {
+        List<RoomType> typeList = typeService.findByCapacityGreaterThan(capacity);
         if(typeList.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -112,6 +180,52 @@ public class TypeController {
             );
         }
     }
+
+    @Operation(summary = "Update a room type image")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RoomType.class)),}),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseObject.class))})
+    })
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<ResponseObject> updatePreviewImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable Long id) {
+        try {
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", typeService.updateImage(id, fileName, multipartFile))
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new ResponseObject("error", "An error occurred while updating - Please check your input", "")
+            );
+        }
+    }
+
+    @GetMapping("/getImage/{id}")
+    public ResponseEntity<?> getImages(@PathVariable Long id) throws IOException {
+        Optional<RoomType> roomType = typeService.findById(id);
+        String imageName = roomType.get().getPreview_image_url();
+        byte[] imageBytes = typeService.getImage(id, imageName);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf(MediaType.IMAGE_JPEG_VALUE))
+                .body(imageBytes);
+    }
+
+    //    @GetMapping("/{fileName}")
+//    public ResponseEntity<ResponseObject> getImage(@PathVariable String fileName) {
+//        try {
+//            return ResponseEntity.status(HttpStatus.OK).body(
+//                    new ResponseObject("ok", "successfully", typeService.updateImage(id, uploadDir, fileName, multipartFile))
+//            );
+//        } catch (Exception e){
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+//                    new ResponseObject("error", "An error occurred while updating - Please check your input", "")
+//            );
+//        }
+//    }
     @Operation(summary = "Delete a room type resource")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully delete resource",

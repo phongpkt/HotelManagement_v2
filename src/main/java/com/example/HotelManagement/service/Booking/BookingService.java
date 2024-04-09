@@ -12,15 +12,21 @@ import com.example.HotelManagement.repository.BookingRepository;
 import com.example.HotelManagement.repository.GuestRepository;
 import com.example.HotelManagement.service.Room.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.HotelManagement.specifications.BookingSpecification.hasGuest;
+import static com.example.HotelManagement.specifications.BookingSpecification.hasStatus;
+import static com.example.HotelManagement.specifications.GuestSpecification.hasFirstName;
+import static com.example.HotelManagement.specifications.GuestSpecification.hasLastName;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 public class BookingService {
@@ -31,16 +37,30 @@ public class BookingService {
     @Autowired
     private GuestRepository guestRepository;
 
-    @Cacheable(value = "bookingList")
     public List<Booking> findAll(){
         return bookingRepository.findAll();
     }
-    @Cacheable(value = "bookingList")
-    public List<Booking> findByUserEmail(String email){
-        return bookingRepository.findBookingByUserEmail(email);
-    }
     public Optional<Booking> findById(Long id){
         return bookingRepository.findById(id);
+    }
+
+    public List<Booking> findByUserEmail(String email) {
+        return bookingRepository.findBookingByUserEmail(email);
+    }
+
+    public List<Booking> findByStatus(String statusString) {
+        BookingStatus status = getStatus(statusString);
+        return bookingRepository.findAll(hasStatus(status));
+    }
+
+    public List<Booking> findByGuestName(String firstName, String lastName) {
+        List<Guest> guests = guestRepository.findAll(where(hasFirstName(firstName)).and(hasLastName(lastName)));
+        List<Booking> bookings = new ArrayList<>();
+        for (Guest guest : guests) {
+            List<Booking> guestBookings = bookingRepository.findAll(hasGuest(guest));
+            bookings.addAll(guestBookings);
+        }
+        return bookings;
     }
 
     public Booking save(guestBookingDTO newBooking){
@@ -63,7 +83,6 @@ public class BookingService {
         }
         return null;
     }
-
     public Booking update(BookingDTO newBooking, Long id){
         Booking updatedBook = bookingRepository.getBookingById(id);
             updatedBook.setCheckInDate(newBooking.getCheckInDate());
@@ -105,7 +124,6 @@ public class BookingService {
         }
         return false;
     }
-
     public void deleteBookingsByCheckOutDateAndStatus() {
         List<Booking> bookings = bookingRepository.findByCheckOutDateBeforeAndStatus();
         for (Booking booking : bookings) {
@@ -113,6 +131,8 @@ public class BookingService {
         }
     }
 
+
+    //======================================================================================
     private BookingStatus getStatus(String status){
         try {
             return BookingStatus.valueOf(status);

@@ -1,6 +1,8 @@
 package com.example.HotelManagement.specifications;
 
+import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.Room;
+import com.example.HotelManagement.model.RoomType;
 import com.example.HotelManagement.model.enums.RoomStatus;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -13,15 +15,15 @@ public class RoomSpecification {
         });
     }
 
-    public static Specification<Room> hasHotel(Long hotel_id) {
+    public static Specification<Room> hasHotel(Hotel hotel) {
         return ((root, criteriaQuery, criteriaBuilder) -> {
-            return criteriaBuilder.equal(root.get("hotel"), hotel_id);
+            return criteriaBuilder.equal(root.get("hotel"), hotel);
         });
     }
 
-    public static Specification<Room> hasType(Long type_id) {
+    public static Specification<Room> hasType(RoomType type) {
         return ((root, criteriaQuery, criteriaBuilder) -> {
-            return criteriaBuilder.equal(root.get("type"), type_id);
+            return criteriaBuilder.equal(root.get("type"), type);
         });
     }
 }

@@ -35,7 +35,7 @@ public class RoomController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class)) })
     })
-    @GetMapping("/find")
+    @GetMapping("/findAll")
     public ResponseEntity<List<Room>> findAll() {
         List<Room> roomList = roomService.findAll();
         if(roomList.isEmpty()){
@@ -89,7 +89,6 @@ public class RoomController {
             );
         }
     }
-
     @Operation(summary = "Insert room")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully inserted resource",
@@ -192,19 +191,27 @@ public class RoomController {
                 new ResponseObject("failed", "Cannot find room to delete", "")
         );
     }
-
     @GetMapping("/find/test1/{status}")
     public ResponseEntity<List<Room>> findByStatusCriteriaAPI(@PathVariable("status") String status) {
-        List<Room> roomList = roomService.findByRoomStatus(status);
+        List<Room> roomList = roomService.findByRoomStatusCriteria(status);
         if (roomList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(roomList, HttpStatus.OK);
     }
 
-    @GetMapping("/find/test2/{status}/{hotel}")
-    public ResponseEntity<List<Room>> findByStatusSpecification(@PathVariable("status") String status) {
+    @GetMapping("/findByStatus")
+    public ResponseEntity<List<Room>> findByStatus(@RequestParam("status") String status) {
         List<Room> roomList = roomService.findByRoomStatusSpecification(status);
+        if (roomList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(roomList, HttpStatus.OK);
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<List<Room>> findByHotelAndType(@RequestParam("hotel") Integer hotelId, @RequestParam("type") Integer typeId) {
+        List<Room> roomList = roomService.findByHotelAndType(Long.valueOf(hotelId), Long.valueOf(typeId));
         if (roomList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

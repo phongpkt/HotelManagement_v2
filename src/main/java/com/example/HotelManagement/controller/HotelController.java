@@ -63,6 +63,30 @@ public class HotelController {
         }
         return new ResponseEntity<>(hotelList, HttpStatus.OK);
     }
+
+    @Operation(summary = "Gets Hotel by name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Hotel.class)),}),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/findByName")
+    public ResponseEntity<ResponseObject> findByName(@RequestParam("name") String name) {
+        Optional<Hotel> foundResource = hotelService.findByName(name);
+        if (foundResource.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", foundResource)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "Cannot find hotel with name = " + name, "")
+            );
+        }
+    }
     @Operation(summary = "Insert hotel")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully inserted resource",

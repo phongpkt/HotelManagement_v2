@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "RoomType")
-public class RoomType {
+public class RoomType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "type_id")
@@ -28,6 +29,8 @@ public class RoomType {
     private double pricePerNight;
     @Column(name = "capacity")
     private int capacity;
+    @Column(name = "preview_image_url", nullable = true, length = 64)
+    private String preview_image_url;
 
 
     @OneToMany(mappedBy = "type")

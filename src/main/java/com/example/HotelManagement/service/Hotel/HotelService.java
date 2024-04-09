@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.HotelManagement.specifications.HotelSpecification.hasName;
+
 @Service
 public class HotelService {
     @Autowired
@@ -20,6 +23,10 @@ public class HotelService {
     }
     public Optional<Hotel> findById(Long id){
         return hotelRepository.findById(id);
+    }
+
+    public Optional<Hotel> findByName(String name) {
+        return hotelRepository.findOne(hasName(name)).stream().findFirst();
     }
     public boolean findDuplicateHotelName(Hotel hotel){
         List<Hotel> foundHotel = hotelRepository.findByName(hotel.getName().trim());

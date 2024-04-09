@@ -22,7 +22,8 @@ import java.util.Optional;
 public class StaffController {
     @Autowired
     private StaffService staffService;
-    @Operation(summary = "Gets Hotel by ID")
+
+    @Operation(summary = "Gets staff by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
                     content = { @Content(mediaType = "application/json",
@@ -61,6 +62,126 @@ public class StaffController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(staffList, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Gets staff by name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Staff.class)),}),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/find/{firstName}/{lastName}")
+    public ResponseEntity<ResponseObject> findByFirstnameAndLastname(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName) {
+        Optional<Staff> foundResource = staffService.findByFirstnameAndLastname(firstName, lastName);
+        if (foundResource.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", foundResource)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "Cannot find staff with name = " + firstName + " " + lastName, "")
+            );
+        }
+    }
+
+    @Operation(summary = "Gets staff by email")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Staff.class)),}),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/findByEmail")
+    public ResponseEntity<ResponseObject> findByEmail(@RequestParam("email") String email) {
+        Optional<Staff> foundResource = staffService.findByEmail(email);
+        if (foundResource.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", foundResource)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "This " + email + " does not exits", "")
+            );
+        }
+    }
+
+    @Operation(summary = "Gets staff by phone")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Staff.class)),}),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/findByPhone")
+    public ResponseEntity<ResponseObject> findByPhone(@RequestParam("phone") String phone) {
+        Optional<Staff> foundResource = staffService.findByPhone(phone);
+        if (foundResource.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", foundResource)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "This person " + phone + " does not exits", "")
+            );
+        }
+    }
+
+    @Operation(summary = "Gets staff by role")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Staff.class)),}),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/findByRole")
+    public ResponseEntity<ResponseObject> findByStaffRole(@RequestParam("role") String role) {
+        List<Staff> foundResource = staffService.findByStaffRole(role);
+        if (!foundResource.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", foundResource)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "No data found", "")
+            );
+        }
+    }
+
+    @Operation(summary = "Gets staff by hotel")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Staff.class)),}),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/findByHotel")
+    public ResponseEntity<ResponseObject> findByHotel(@RequestParam("hotel") Integer hotel) {
+        List<Staff> foundResource = staffService.findByHotel(Long.valueOf(hotel));
+        if (!foundResource.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", foundResource)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "An error occurred - Please check your input", "")
+            );
+        }
     }
     @Operation(summary = "Create a new staff")
     @ApiResponses(value = {

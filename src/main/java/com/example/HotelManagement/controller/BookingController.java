@@ -79,7 +79,6 @@ public class BookingController {
             );
         }
     }
-
     @Operation(summary = "Gets all bookings")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
@@ -96,6 +95,56 @@ public class BookingController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(bookingList, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get book by status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Booking.class)),}),
+            @ApiResponse(responseCode = "400", description = "Please input"),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/findByStatus")
+    public ResponseEntity<ResponseObject> findByStatus(@RequestParam("status") String statusString) {
+        List<Booking> foundResource = bookingService.findByStatus(statusString);
+        if (!foundResource.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", foundResource)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "An error occured - Please check your input", "")
+            );
+        }
+    }
+
+    @Operation(summary = "Get book by guest name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Booking.class)),}),
+            @ApiResponse(responseCode = "400", description = "Please input"),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/findBookByName")
+    public ResponseEntity<ResponseObject> findByGuestName(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+        List<Booking> foundResource = bookingService.findByGuestName(firstName, lastName);
+        if (!foundResource.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", foundResource)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "No data founded", "")
+            );
+        }
     }
     @Operation(summary = "Book a room", description = """
             Booking status:\s
@@ -116,7 +165,7 @@ public class BookingController {
                             schema = @Schema(implementation = ResponseObject.class)) })
     })
     @PostMapping("/book")
-    public ResponseEntity<ResponseObject> book_room(@RequestBody guestBookingDTO newBooking) {
+    public ResponseEntity<ResponseObject> BookingRoom(@RequestBody guestBookingDTO newBooking) {
         try {
             Booking book = bookingService.save(newBooking);
             if (book == null){

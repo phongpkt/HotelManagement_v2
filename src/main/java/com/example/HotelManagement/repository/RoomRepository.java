@@ -1,4 +1,4 @@
-package com.example.HotelManagement.repository.Room;
+package com.example.HotelManagement.repository;
 
 import com.example.HotelManagement.model.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
