@@ -1,6 +1,7 @@
 package com.example.HotelManagement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import java.util.List;
 @Table(name = "RoomType")
 public class RoomType implements Serializable {
     @Id
+    @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "type_id")
     private Long id;
@@ -29,15 +31,13 @@ public class RoomType implements Serializable {
     private double pricePerNight;
     @Column(name = "capacity")
     private int capacity;
-    @Column(name = "preview_image_url", nullable = true, length = 64)
-    private String preview_image_url;
 
-
+    @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL)
+    private List<Gallery> images;
+    @OneToOne
+    @JoinColumn(name = "preview_image_id")
+    private Gallery previewImage;
     @OneToMany(mappedBy = "type")
     @JsonIgnore
     private List<Room> rooms;
-    @ElementCollection
-    @CollectionTable(name = "gallery", joinColumns = @JoinColumn(name = "type_id"))
-    @Column(name = "image_url")
-    private List<String> imageUrls;
 }

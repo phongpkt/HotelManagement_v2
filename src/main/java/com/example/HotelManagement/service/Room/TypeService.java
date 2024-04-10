@@ -1,17 +1,17 @@
 package com.example.HotelManagement.service.Room;
 
+import com.example.HotelManagement.model.Gallery;
+import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.RoomType;
 import com.example.HotelManagement.repository.TypeRepository;
+import com.example.HotelManagement.service.GalleryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +22,8 @@ import static org.springframework.data.jpa.domain.Specification.where;
 public class TypeService {
     @Autowired
     private TypeRepository typeRepository;
-    private final String root = "src/main/resources/static/images/";
+    @Autowired
+    private GalleryService galleryService;
 
     public List<RoomType> findAll(){
         return typeRepository.findAll();
@@ -31,14 +32,15 @@ public class TypeService {
         return typeRepository.findById(id);
     }
 
+    public Hotel findHotelByRoom(Long id) {
+        return typeRepository.findHotelByRoom(id);
+    }
     public Optional<RoomType> findByName(String name) {
         return typeRepository.findOne(where(hasName(name)));
     }
-
     public List<RoomType> findByPriceLessThan(Double price) {
         return typeRepository.findAll(hasPriceLessThan(price));
     }
-
     public List<RoomType> findByCapacityGreaterThan(Integer capacity) {
         return typeRepository.findAll(hasCapacityGreaterThan(capacity));
     }
@@ -47,8 +49,8 @@ public class TypeService {
         return typeRepository.save(newType);
     }
     public boolean findDuplicateRoomType(RoomType type){
-        List<RoomType> foundType = typeRepository.findByName(type.getName().trim());
-        return !foundType.isEmpty();
+        Optional<RoomType> foundType = typeRepository.findOne(where(hasName(type.getName()))).stream().findAny();
+        return foundType.isPresent();
     }
     public RoomType update(RoomType newType, Long id){
         RoomType updatedType = typeRepository.findById(id).map(type -> {
@@ -65,31 +67,30 @@ public class TypeService {
         return updatedType;
     }
 
-    public RoomType updateImage(Long id, String fileName, MultipartFile multipartFile) throws IOException {
+//    public RoomType updateImage(Long id, String fileName, MultipartFile multipartFile) throws IOException {
+//        Optional<RoomType> updatedType = typeRepository.findById(id);
+//        if (updatedType.isPresent()) {
+//            Gallery image = galleryService.save(updatedType.get(), fileName, multipartFile);
+//            updatedType.get().setImages(image);
+//            typeRepository.save(updatedType.get());
+//            return updatedType.get();
+//        }
+//        return null;
+//    }
+
+    public RoomType updatePreviewImage(Long id, String fileName, MultipartFile multipartFile) throws IOException {
         Optional<RoomType> updatedType = typeRepository.findById(id);
-        String uploadDir = root + id;
         if (updatedType.isPresent()) {
-            Path uploadPath = Paths.get(uploadDir);
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-            try (InputStream inputStream = multipartFile.getInputStream()) {
-                Path filePath = uploadPath.resolve(fileName);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException ioe) {
-                throw new IOException("Could not save image file: " + fileName, ioe);
-            }
-            updatedType.get().setPreview_image_url(fileName);
+            Gallery image = galleryService.save(updatedType.get(), fileName, multipartFile);
+            updatedType.get().setPreviewImage(image);
             typeRepository.save(updatedType.get());
             return updatedType.get();
         }
         return null;
     }
 
-    public byte[] getImage(Long id, String imageName) throws IOException {
-        String imageDirectory = root + id;
-        Path imagePath = Path.of(imageDirectory, imageName);
-
+    public byte[] getImage(String imageURL) throws IOException {
+        Path imagePath = Path.of(imageURL);
         if (Files.exists(imagePath)) {
             byte[] imageBytes = Files.readAllBytes(imagePath);
             return imageBytes;

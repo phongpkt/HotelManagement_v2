@@ -13,3 +13,11 @@ INSERT INTO room_type (name, description, price_per_night, capacity) VALUES
 ('Duplex room', 'Smart TV, 1 King bed, 85m², Non-smoking, Free Wifi, studio nguyên căn 85 m², Bếp riêng, Phòng tắm riêng, Điều hòa không khí, Hệ thống cách âm, Minibar', 1550000.00, 2),
 ('Deluxe', 'Studio nguyên căn, 40m², Bếp riêng, Phòng tắm riêng trong phòng, Điều hòa không khí, Smart TV, Hệ thống cách âm, Minibar, WiFi miễn phí - Ăn sáng phục vụ tại phòng - Cho thuê xe máy', 1350000.00, 4),
 ('Superior', 'Studio nguyên căn, 38 m², Bếp riêng, Phòng tắm riêng trong phòng, Điều hòa không khí, Smart TV, Hệ thống cách âm, Minibar, WiFi miễn phí - Ăn sáng phục vụ tại phòng - Cho thuê xe máy', 1050000.00, 4);
+
+INSERT INTO room (hotel_id, type_id, status) VALUES
+(1, 1, 'Available'),
+(1, 2, 'Available'),
+(1, 3, 'Available'),
+(2, 4, 'Available'),
+(2, 5, 'Available'),
+(2, 6, 'Available');

@@ -2,6 +2,7 @@ package com.example.HotelManagement.model;
 
 import com.example.HotelManagement.model.enums.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,7 @@ import java.util.List;
 @Table(name = "Booking")
 public class Booking {
     @Id
+    @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
     private long id;

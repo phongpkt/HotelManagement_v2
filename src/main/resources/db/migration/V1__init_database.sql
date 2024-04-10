@@ -6,12 +6,12 @@ CREATE TABLE IF NOT EXISTS hotel (
 );
 
 CREATE TABLE IF NOT EXISTS room_type (
-    type_id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    type_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
     description TEXT,
     price_per_night DECIMAL(10, 2),
     capacity INT,
-    preview_image_url VARCHAR (255)
+    preview_image_id BIGINT
 );
 
 CREATE TABLE IF NOT EXISTS room (
@@ -63,8 +63,8 @@ CREATE TABLE IF NOT EXISTS guest (
 );
 
 CREATE TABLE IF NOT EXISTS gallery (
-    image_id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    type_id BIGINT NOT NULL,
-    image_url VARCHAR (255),
-    FOREIGN KEY (type_id) REFERENCES room_type(type_id)
+    image_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    image_url VARCHAR(255),
+    room_type_id BIGINT,
+    FOREIGN KEY (room_type_id) REFERENCES room_type(type_id)
 );

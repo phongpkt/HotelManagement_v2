@@ -1,6 +1,7 @@
 package com.example.HotelManagement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import java.util.List;
 @Table(name = "Hotel")
 public class Hotel implements Serializable {
     @Id
+    @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hotel_id")
     private Long id;

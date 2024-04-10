@@ -1,5 +1,6 @@
 package com.example.HotelManagement.controller;
 
+import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.RoomType;
 import com.example.HotelManagement.model.exceptions.ResponseObject;
 import com.example.HotelManagement.service.Room.TypeService;
@@ -66,6 +67,28 @@ public class TypeController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(typeList, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Find hotel by room")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Hotel.class)),}),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/findHotel/{id}")
+    public ResponseEntity<ResponseObject> findHotelByRoom(@PathVariable("id") Long id) {
+        Hotel hotel = typeService.findHotelByRoom(id);
+        if (hotel == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "This " + hotel + " does not exits", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("success", "Successfully retrieved data", hotel)
+        );
     }
 
     @Operation(summary = "Gets room type by name")
@@ -195,7 +218,7 @@ public class TypeController {
         try {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "successfully", typeService.updateImage(id, fileName, multipartFile))
+                    new ResponseObject("ok", "successfully", typeService.updatePreviewImage(id, fileName, multipartFile))
             );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -207,25 +230,17 @@ public class TypeController {
     @GetMapping("/getImage/{id}")
     public ResponseEntity<?> getImages(@PathVariable Long id) throws IOException {
         Optional<RoomType> roomType = typeService.findById(id);
-        String imageName = roomType.get().getPreview_image_url();
-        byte[] imageBytes = typeService.getImage(id, imageName);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf(MediaType.IMAGE_JPEG_VALUE))
-                .body(imageBytes);
+        if (roomType.isPresent()) {
+            String imageURL = roomType.get().getPreviewImage().getImage_url();
+            byte[] imageBytes = typeService.getImage(imageURL);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .contentType(MediaType.valueOf(MediaType.IMAGE_JPEG_VALUE))
+                    .body(imageBytes);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("error", "No data found", "")
+        );
     }
-
-    //    @GetMapping("/{fileName}")
-//    public ResponseEntity<ResponseObject> getImage(@PathVariable String fileName) {
-//        try {
-//            return ResponseEntity.status(HttpStatus.OK).body(
-//                    new ResponseObject("ok", "successfully", typeService.updateImage(id, uploadDir, fileName, multipartFile))
-//            );
-//        } catch (Exception e){
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-//                    new ResponseObject("error", "An error occurred while updating - Please check your input", "")
-//            );
-//        }
-//    }
     @Operation(summary = "Delete a room type resource")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully delete resource",

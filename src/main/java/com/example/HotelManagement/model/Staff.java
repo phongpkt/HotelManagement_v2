@@ -1,6 +1,7 @@
 package com.example.HotelManagement.model;
 
 import com.example.HotelManagement.model.enums.StaffRole;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import lombok.Setter;
 @Table(name = "Staff")
 public class Staff {
     @Id
+    @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id")
     private long id;
