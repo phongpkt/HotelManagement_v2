@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS staff (
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     phone VARCHAR(20),
-    email VARCHAR(255),
-    password VARCHAR(255),
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     FOREIGN KEY (hotel_id) REFERENCES hotel(hotel_id)
 );
 
@@ -58,13 +58,15 @@ CREATE TABLE IF NOT EXISTS guest (
     last_name VARCHAR(255) NOT NULL,
     date_of_birth DATE,
     address VARCHAR(255),
-    email VARCHAR(255),
+    email VARCHAR(255) NOT NULL,
     phone VARCHAR(20)
 );
 
 CREATE TABLE IF NOT EXISTS gallery (
     image_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     image_url VARCHAR(255),
+    image_format VARCHAR(255),
+    image_type VARCHAR(255),
     room_type_id BIGINT,
     FOREIGN KEY (room_type_id) REFERENCES room_type(type_id)
 );

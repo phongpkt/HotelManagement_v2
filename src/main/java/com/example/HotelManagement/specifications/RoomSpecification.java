@@ -1,9 +1,9 @@
 package com.example.HotelManagement.specifications;
 
+import com.example.HotelManagement.enums.RoomStatus;
 import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.Room;
 import com.example.HotelManagement.model.RoomType;
-import com.example.HotelManagement.model.enums.RoomStatus;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 

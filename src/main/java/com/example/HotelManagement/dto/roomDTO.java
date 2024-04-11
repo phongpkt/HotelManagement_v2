@@ -1,8 +1,5 @@
-package com.example.HotelManagement.model.dto;
+package com.example.HotelManagement.dto;
 
-import com.example.HotelManagement.model.Hotel;
-import com.example.HotelManagement.model.RoomType;
-import com.example.HotelManagement.model.enums.RoomStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.example.HotelManagement.model;
 
-import com.example.HotelManagement.model.enums.StaffRole;
+import com.example.HotelManagement.enums.StaffRole;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

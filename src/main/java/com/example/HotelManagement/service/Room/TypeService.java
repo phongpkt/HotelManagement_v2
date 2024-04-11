@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,10 +46,6 @@ public class TypeService {
     public RoomType save(RoomType newType) {
         return typeRepository.save(newType);
     }
-    public boolean findDuplicateRoomType(RoomType type){
-        Optional<RoomType> foundType = typeRepository.findOne(where(hasName(type.getName()))).stream().findAny();
-        return foundType.isPresent();
-    }
     public RoomType update(RoomType newType, Long id){
         RoomType updatedType = typeRepository.findById(id).map(type -> {
             type.setName(newType.getName());
@@ -67,21 +61,10 @@ public class TypeService {
         return updatedType;
     }
 
-//    public RoomType updateImage(Long id, String fileName, MultipartFile multipartFile) throws IOException {
-//        Optional<RoomType> updatedType = typeRepository.findById(id);
-//        if (updatedType.isPresent()) {
-//            Gallery image = galleryService.save(updatedType.get(), fileName, multipartFile);
-//            updatedType.get().setImages(image);
-//            typeRepository.save(updatedType.get());
-//            return updatedType.get();
-//        }
-//        return null;
-//    }
-
-    public RoomType updatePreviewImage(Long id, String fileName, MultipartFile multipartFile) throws IOException {
+    public RoomType updatePreviewImage(Long id, String fileName, String format, MultipartFile multipartFile) throws IOException {
         Optional<RoomType> updatedType = typeRepository.findById(id);
         if (updatedType.isPresent()) {
-            Gallery image = galleryService.save(updatedType.get(), fileName, multipartFile);
+            Gallery image = galleryService.updatePreviewImageForRoom(updatedType.get(), format, fileName, multipartFile);
             updatedType.get().setPreviewImage(image);
             typeRepository.save(updatedType.get());
             return updatedType.get();
@@ -89,16 +72,18 @@ public class TypeService {
         return null;
     }
 
-    public byte[] getImage(String imageURL) throws IOException {
-        Path imagePath = Path.of(imageURL);
-        if (Files.exists(imagePath)) {
-            byte[] imageBytes = Files.readAllBytes(imagePath);
-            return imageBytes;
-        } else {
-            return null; // Handle missing images
+    public RoomType saveRoomTypeImages(Long id, String fileName, String format, MultipartFile multipartFile) throws IOException {
+        Optional<RoomType> updatedType = typeRepository.findById(id);
+        if (updatedType.isPresent()) {
+            galleryService.saveRoomTypeImages(updatedType.get(), fileName, format, multipartFile);
+            return updatedType.get();
         }
+        return null;
     }
 
+    public byte[] getImage(String imageURL) throws IOException {
+        return galleryService.getImage(imageURL);
+    }
     public boolean delete(Long id) {
         boolean exists = typeRepository.existsById(id);
         if(exists) {

@@ -1,7 +1,9 @@
 package com.example.HotelManagement.model;
 
+import com.example.HotelManagement.enums.ImageTypes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.Hidden;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,8 +24,14 @@ public class Gallery {
     private Long id;
     @Column(name = "image_url")
     private String image_url;
+    @Column(name = "image_format")
+    private String image_format;
+    @Column(name = "image_type")
+    @Enumerated(value = EnumType.STRING)
+    private ImageTypes image_type;
     @ManyToOne
     @JoinColumn(name = "room_type_id")
     @JsonIgnore
+    @Nullable
     private RoomType roomType;
 }

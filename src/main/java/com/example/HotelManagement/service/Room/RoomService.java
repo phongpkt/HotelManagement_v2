@@ -1,20 +1,14 @@
 package com.example.HotelManagement.service.Room;
 
+import com.example.HotelManagement.dto.roomDTO;
+import com.example.HotelManagement.enums.RoomStatus;
 import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.Room;
 import com.example.HotelManagement.model.RoomType;
-import com.example.HotelManagement.model.dto.roomDTO;
-import com.example.HotelManagement.model.enums.RoomStatus;
 import com.example.HotelManagement.repository.RoomRepository;
 import com.example.HotelManagement.service.Hotel.HotelService;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -35,7 +29,6 @@ public class RoomService {
     @Autowired
     private EntityManager entityManager;
 
-    @Cacheable(value = "roomList")
     public List<Room> findAll(){
         return roomRepository.findAll();
     }
@@ -44,19 +37,8 @@ public class RoomService {
         return roomRepository.findById(id);
     }
 
-    @Cacheable(value = "roomList")
     public List<Room> findByRoomType(String roomType) {
         return roomRepository.findRoomByType(roomType);
-    }
-
-    public List<Room> findByRoomStatusCriteria(String status) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Room> cq = cb.createQuery(Room.class);
-        Root<Room> roomRoot = cq.from(Room.class);
-        Predicate statusPredicate = cb.equal(roomRoot.get("Status"), status);
-        cq.where(statusPredicate);
-        TypedQuery<Room> query = entityManager.createQuery(cq);
-        return query.getResultList();
     }
 
     public List<Room> findByRoomStatusSpecification(String statusString) {

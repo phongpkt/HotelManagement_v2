@@ -1,7 +1,7 @@
 package com.example.HotelManagement.controller;
 
+import com.example.HotelManagement.exceptions.ResponseObject;
 import com.example.HotelManagement.model.Payment;
-import com.example.HotelManagement.model.exceptions.ResponseObject;
 import com.example.HotelManagement.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController

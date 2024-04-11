@@ -1,8 +1,8 @@
 package com.example.HotelManagement.service.Staff;
 
+import com.example.HotelManagement.enums.StaffRole;
 import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.Staff;
-import com.example.HotelManagement.model.enums.StaffRole;
 import com.example.HotelManagement.repository.StaffRepository;
 import com.example.HotelManagement.service.Hotel.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +29,15 @@ public class StaffService {
     public Optional<Staff> findById(Long id) {
         return staffRepository.findById(id);
     }
-
     public Optional<Staff> findByFirstnameAndLastname(String firstName, String lastName) {
         return staffRepository.findOne(where(hasFirstName(firstName).and(hasLastName(lastName))));
     }
-
     public Optional<Staff> findByEmail(String email) {
         return staffRepository.findOne(where(hasEmail(email)));
     }
-
     public Optional<Staff> findByPhone(String phone) {
         return staffRepository.findOne(where(hasPhone(phone)));
     }
-
     public List<Staff> findByStaffRole(String roleString) {
         StaffRole role;
         try {
@@ -51,7 +47,6 @@ public class StaffService {
         }
         return staffRepository.findAll(hasRole(role));
     }
-
     public List<Staff> findByHotel(Long hotel_id) {
         Optional<Hotel> optionalHotel = hotelService.findById(hotel_id);
         return optionalHotel.map(hotel -> staffRepository.findAll(where(hasHotel(hotel)))).orElse(Collections.emptyList());

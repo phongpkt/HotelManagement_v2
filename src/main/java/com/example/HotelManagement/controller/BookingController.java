@@ -1,11 +1,11 @@
 package com.example.HotelManagement.controller;
 
+import com.example.HotelManagement.dto.BookingDTO;
+import com.example.HotelManagement.dto.guestBookingDTO;
+import com.example.HotelManagement.dto.guestEmailDTO;
+import com.example.HotelManagement.dto.statusRequest;
+import com.example.HotelManagement.exceptions.ResponseObject;
 import com.example.HotelManagement.model.Booking;
-import com.example.HotelManagement.model.dto.BookingDTO;
-import com.example.HotelManagement.model.dto.guestBookingDTO;
-import com.example.HotelManagement.model.dto.guestEmailDTO;
-import com.example.HotelManagement.model.dto.statusRequest;
-import com.example.HotelManagement.model.exceptions.ResponseObject;
 import com.example.HotelManagement.service.Booking.BookingService;
 import com.example.HotelManagement.service.Booking.EmailService;
 import io.swagger.v3.oas.annotations.Hidden;

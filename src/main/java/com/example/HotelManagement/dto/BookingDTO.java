@@ -1,4 +1,4 @@
-package com.example.HotelManagement.model.dto;
+package com.example.HotelManagement.dto;
 
 import lombok.Getter;
 import lombok.Setter;

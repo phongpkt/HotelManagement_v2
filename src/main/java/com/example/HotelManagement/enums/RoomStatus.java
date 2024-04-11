@@ -1,4 +1,4 @@
-package com.example.HotelManagement.model.enums;
+package com.example.HotelManagement.enums;
 
 public enum RoomStatus {
     reserved,

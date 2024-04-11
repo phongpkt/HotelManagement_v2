@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -17,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Hotel")
-public class Hotel implements Serializable {
+public class Hotel {
     @Id
     @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)

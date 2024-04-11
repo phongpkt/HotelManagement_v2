@@ -1,8 +1,8 @@
 package com.example.HotelManagement.specifications;
 
+import com.example.HotelManagement.enums.StaffRole;
 import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.Staff;
-import com.example.HotelManagement.model.enums.StaffRole;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 

@@ -1,10 +1,10 @@
 package com.example.HotelManagement.controller;
 
+import com.example.HotelManagement.dto.roomDTO;
+import com.example.HotelManagement.dto.roomTypeDTO;
+import com.example.HotelManagement.dto.statusRequest;
+import com.example.HotelManagement.exceptions.ResponseObject;
 import com.example.HotelManagement.model.Room;
-import com.example.HotelManagement.model.dto.roomDTO;
-import com.example.HotelManagement.model.dto.roomTypeDTO;
-import com.example.HotelManagement.model.dto.statusRequest;
-import com.example.HotelManagement.model.exceptions.ResponseObject;
 import com.example.HotelManagement.service.Room.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -190,14 +190,6 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("failed", "Cannot find room to delete", "")
         );
-    }
-    @GetMapping("/find/test1/{status}")
-    public ResponseEntity<List<Room>> findByStatusCriteriaAPI(@PathVariable("status") String status) {
-        List<Room> roomList = roomService.findByRoomStatusCriteria(status);
-        if (roomList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(roomList, HttpStatus.OK);
     }
 
     @GetMapping("/findByStatus")

@@ -1,4 +1,4 @@
-package com.example.HotelManagement.model.exceptions;
+package com.example.HotelManagement.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,13 +1,13 @@
 package com.example.HotelManagement.service.Booking;
 
+import com.example.HotelManagement.dto.BookingDTO;
+import com.example.HotelManagement.dto.guestBookingDTO;
+import com.example.HotelManagement.enums.BookingStatus;
+import com.example.HotelManagement.enums.RoomStatus;
 import com.example.HotelManagement.model.Booking;
 import com.example.HotelManagement.model.Guest;
 import com.example.HotelManagement.model.Room;
 import com.example.HotelManagement.model.RoomType;
-import com.example.HotelManagement.model.dto.BookingDTO;
-import com.example.HotelManagement.model.dto.guestBookingDTO;
-import com.example.HotelManagement.model.enums.BookingStatus;
-import com.example.HotelManagement.model.enums.RoomStatus;
 import com.example.HotelManagement.repository.BookingRepository;
 import com.example.HotelManagement.repository.GuestRepository;
 import com.example.HotelManagement.service.Room.RoomService;

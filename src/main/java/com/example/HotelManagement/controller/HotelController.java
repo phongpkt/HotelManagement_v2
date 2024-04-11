@@ -1,7 +1,7 @@
 package com.example.HotelManagement.controller;
 
+import com.example.HotelManagement.exceptions.ResponseObject;
 import com.example.HotelManagement.model.Hotel;
-import com.example.HotelManagement.model.exceptions.ResponseObject;
 import com.example.HotelManagement.service.Hotel.HotelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -92,28 +92,21 @@ public class HotelController {
             @ApiResponse(responseCode = "200", description = "Successfully inserted resource",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Hotel.class)), }),
-            @ApiResponse(responseCode = "406", description = "Hotel name already exists"),
             @ApiResponse(responseCode = "500", description = "Invalid Request",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ResponseObject.class)) })
     })
     @PostMapping("/insert")
     public ResponseEntity<ResponseObject> save(@RequestBody Hotel newHotel) {
-        boolean isDuplicated = hotelService.findDuplicateHotelName(newHotel);
-        if (!isDuplicated){
-            try {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "successfully", hotelService.save(newHotel))
-                );
-            } catch (Exception e){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        new ResponseObject("error", "An error occurred while saving", "")
-                );
-            }
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", hotelService.save(newHotel))
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new ResponseObject("error", "An error occurred while saving", "")
+            );
         }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                new ResponseObject("ok", "Please select another product name", "!!! -> " + newHotel.getName())
-        );
     }
     @Operation(summary = "Replace a hotel resource in the db")
     @ApiResponses(value = {

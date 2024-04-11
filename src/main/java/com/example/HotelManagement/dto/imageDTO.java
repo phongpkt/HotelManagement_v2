@@ -1,4 +1,4 @@
-package com.example.HotelManagement.model.dto;
+package com.example.HotelManagement.dto;
 
 public class imageDTO {
     private Long id;

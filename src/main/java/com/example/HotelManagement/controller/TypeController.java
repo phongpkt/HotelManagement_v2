@@ -1,8 +1,8 @@
 package com.example.HotelManagement.controller;
 
+import com.example.HotelManagement.exceptions.ResponseObject;
 import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.RoomType;
-import com.example.HotelManagement.model.exceptions.ResponseObject;
 import com.example.HotelManagement.service.Room.TypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -159,28 +159,21 @@ public class TypeController {
             @ApiResponse(responseCode = "200", description = "Successfully inserted resource",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = RoomType.class)), }),
-            @ApiResponse(responseCode = "406", description = "Type name already exists"),
             @ApiResponse(responseCode = "500", description = "Invalid Request",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ResponseObject.class)) })
     })
     @PostMapping("/insert")
     public ResponseEntity<ResponseObject> save(@RequestBody RoomType newType) {
-        boolean isDuplicated = typeService.findDuplicateRoomType(newType);
-        if (!isDuplicated){
-            try {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "successfully", typeService.save(newType))
-                );
-            } catch (Exception e){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        new ResponseObject("error", "An error occurred while saving", "")
-                );
-            }
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", typeService.save(newType))
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new ResponseObject("error", "An error occurred while saving", "")
+            );
         }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                new ResponseObject("ok", "Please select another name", "!!! -> " + newType.getName())
-        );
     }
     @Operation(summary = "Replace a room type in the db")
     @ApiResponses(value = {
@@ -217,8 +210,33 @@ public class TypeController {
     public ResponseEntity<ResponseObject> updatePreviewImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable Long id) {
         try {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            String format = multipartFile.getContentType();
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "successfully", typeService.updatePreviewImage(id, fileName, multipartFile))
+                    new ResponseObject("ok", "successfully", typeService.updatePreviewImage(id, fileName, format, multipartFile))
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new ResponseObject("error", "An error occurred while updating - Please check your input", "")
+            );
+        }
+    }
+
+    @Operation(summary = "Save a room type image")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated resource",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RoomType.class)),}),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseObject.class))})
+    })
+    @PostMapping("/save/image/{id}")
+    public ResponseEntity<ResponseObject> saveRoomTypeImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable Long id) {
+        try {
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            String format = multipartFile.getContentType();
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "successfully", typeService.saveRoomTypeImages(id, fileName, format, multipartFile))
             );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -231,11 +249,14 @@ public class TypeController {
     public ResponseEntity<?> getImages(@PathVariable Long id) throws IOException {
         Optional<RoomType> roomType = typeService.findById(id);
         if (roomType.isPresent()) {
-            String imageURL = roomType.get().getPreviewImage().getImage_url();
-            byte[] imageBytes = typeService.getImage(imageURL);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .contentType(MediaType.valueOf(MediaType.IMAGE_JPEG_VALUE))
-                    .body(imageBytes);
+            if (roomType.get().getPreviewImage() != null) {
+                String imageURL = roomType.get().getPreviewImage().getImage_url();
+                String imageFormat = roomType.get().getPreviewImage().getImage_format();
+                byte[] imageBytes = typeService.getImage(imageURL);
+                return ResponseEntity.status(HttpStatus.OK)
+                        .contentType(MediaType.valueOf(imageFormat))
+                        .body(imageBytes);
+            }
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("error", "No data found", "")
