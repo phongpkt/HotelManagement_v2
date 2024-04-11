@@ -28,10 +28,6 @@ public class HotelService {
     public Optional<Hotel> findByName(String name) {
         return hotelRepository.findOne(hasName(name)).stream().findFirst();
     }
-    public boolean findDuplicateHotelName(Hotel hotel){
-        List<Hotel> foundHotel = hotelRepository.findByName(hotel.getName().trim());
-        return !foundHotel.isEmpty();
-    }
     public Hotel update(Hotel newHotel, Long id){
         Hotel updatedHotel = hotelRepository.findById(id).map(hotel -> {
             hotel.setName(newHotel.getName());

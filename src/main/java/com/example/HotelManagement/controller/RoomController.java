@@ -191,14 +191,6 @@ public class RoomController {
                 new ResponseObject("failed", "Cannot find room to delete", "")
         );
     }
-    @GetMapping("/find/test1/{status}")
-    public ResponseEntity<List<Room>> findByStatusCriteriaAPI(@PathVariable("status") String status) {
-        List<Room> roomList = roomService.findByRoomStatusCriteria(status);
-        if (roomList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(roomList, HttpStatus.OK);
-    }
 
     @GetMapping("/findByStatus")
     public ResponseEntity<List<Room>> findByStatus(@RequestParam("status") String status) {
