@@ -2,6 +2,7 @@ package com.example.HotelManagement.controller;
 
 import com.example.HotelManagement.exceptions.ResponseObject;
 import com.example.HotelManagement.model.Gallery;
+import com.example.HotelManagement.model.RoomType;
 import com.example.HotelManagement.service.GalleryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,15 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/gallery")
+@CrossOrigin("http://localhost:5173/")
 public class GalleryController {
     @Autowired
     private GalleryService galleryService;
@@ -36,17 +38,35 @@ public class GalleryController {
                     content = {@Content(mediaType = "application/json")})
     })
     @GetMapping("/find")
-    public ResponseEntity<?> getImages() throws IOException {
-        List<byte[]> images = galleryService.getAllImages();
-
-        if (!images.isEmpty()) {
+//    public ResponseEntity<List<Gallery>> findAll() throws IOException {
+//        List<Gallery> imagesList = galleryService.getAllImages();
+//        if (imagesList.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<>(imagesList, HttpStatus.OK);
+//    }
+    //TODO: FIX load all images
+    public ResponseEntity<List<byte[]>> getAllImages() throws IOException {
+        List<Gallery> imagesList = galleryService.getAllImages();
+        List<byte[]> imageBytesList = new ArrayList<>();
+        List<String> imageFormatList  = new ArrayList<>();
+        for (Gallery image : imagesList) {
+            if (image != null) {
+                String imageURL = image.getImage_url();
+                byte[] imageBytes = galleryService.getImage(imageURL);
+                imageBytesList.add(imageBytes);
+                imageFormatList.add(image.getImage_format());
+            }
+        }
+        if (!imageBytesList.isEmpty()) {
+            List<MediaType> mediaTypes = new ArrayList<>();
+            for (String format : imageFormatList) {
+                mediaTypes.add(MediaType.valueOf(format));
+            }
             return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(images);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("error", "No data found", "")
-            );
+                    .body(imageBytesList);
         }
+        return null;
     }
 }

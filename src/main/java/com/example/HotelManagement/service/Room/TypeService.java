@@ -64,7 +64,7 @@ public class TypeService {
     public RoomType updatePreviewImage(Long id, String fileName, String format, MultipartFile multipartFile) throws IOException {
         Optional<RoomType> updatedType = typeRepository.findById(id);
         if (updatedType.isPresent()) {
-            Gallery image = galleryService.updatePreviewImageForRoom(updatedType.get(), format, fileName, multipartFile);
+            Gallery image = galleryService.updatePreviewImageForRoom(updatedType.get(), fileName, format, multipartFile);
             updatedType.get().setPreviewImage(image);
             typeRepository.save(updatedType.get());
             return updatedType.get();

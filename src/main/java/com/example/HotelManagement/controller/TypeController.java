@@ -3,6 +3,7 @@ package com.example.HotelManagement.controller;
 import com.example.HotelManagement.exceptions.ResponseObject;
 import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.RoomType;
+import com.example.HotelManagement.service.GalleryService;
 import com.example.HotelManagement.service.Room.TypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -28,6 +30,8 @@ import java.util.Optional;
 public class TypeController {
     @Autowired
     private TypeService typeService;
+
+
     @Operation(summary = "Get a room type by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved resource",
@@ -209,7 +213,7 @@ public class TypeController {
     @PatchMapping("/update/{id}")
     public ResponseEntity<ResponseObject> updatePreviewImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable Long id) {
         try {
-            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
             String format = multipartFile.getContentType();
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "successfully", typeService.updatePreviewImage(id, fileName, format, multipartFile))
@@ -233,7 +237,7 @@ public class TypeController {
     @PostMapping("/save/image/{id}")
     public ResponseEntity<ResponseObject> saveRoomTypeImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable Long id) {
         try {
-            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
             String format = multipartFile.getContentType();
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "successfully", typeService.saveRoomTypeImages(id, fileName, format, multipartFile))
