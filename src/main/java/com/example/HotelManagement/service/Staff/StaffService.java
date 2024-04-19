@@ -56,8 +56,8 @@ public class StaffService {
         return staffRepository.save(newStaff);
     }
     public boolean findDuplication(Staff staff){
-        List<Staff> foundResource = staffRepository.findByEmail(staff.getEmail().trim());
-        return !foundResource.isEmpty();
+        Optional<Staff> foundResource = staffRepository.findByEmail(staff.getEmail().trim());
+        return foundResource.isPresent();
     }
     public Staff update(Staff newStaff, Long id){
         Staff updatedStaff = staffRepository.findById(id).map(staff -> {

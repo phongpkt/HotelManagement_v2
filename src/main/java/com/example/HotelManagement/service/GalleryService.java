@@ -15,14 +15,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class GalleryService {
     private final String root = "src/main/resources/static/images/";
+    private final Path filePath = Paths.get(root);
     @Autowired
     private GalleryRepository galleryRepository;
     @Autowired

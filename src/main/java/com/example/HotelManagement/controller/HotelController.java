@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,7 @@ public class HotelController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class)) })
     })
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/find/{id}")
     public ResponseEntity<ResponseObject> findById(@PathVariable("id") Long id) {
         Optional<Hotel> foundResource = hotelService.findById(id);
