@@ -29,7 +29,9 @@ public class GalleryService {
     public List<Gallery> getAllImages() throws IOException {
         return galleryRepository.findAll();
     }
-
+    public List<Gallery> getImagesByRoom(Long id) throws IOException{
+        return galleryRepository.findByRoomType(id);
+    }
     public Gallery save(String typeString, String fileName, MultipartFile multipartFile) throws IOException {
         Gallery image = new Gallery();
         Path uploadPath = Paths.get(root);

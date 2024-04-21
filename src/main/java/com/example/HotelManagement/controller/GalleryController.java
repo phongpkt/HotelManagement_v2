@@ -49,5 +49,12 @@ public class GalleryController {
                     .contentType(MediaType.valueOf(format))
                     .body(imageBytes);
     }
-
+    @GetMapping("/find/{id}")
+    public ResponseEntity<List<Gallery>> findImagesByRoom(@PathVariable("id") Long id) throws IOException {
+        List<Gallery> imagesList = galleryService.getImagesByRoom(id);
+        if (imagesList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(imagesList, HttpStatus.OK);
+    }
 }

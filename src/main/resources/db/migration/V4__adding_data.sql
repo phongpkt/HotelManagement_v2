@@ -11,11 +11,11 @@ INSERT INTO room_type (name, description, price_per_night, capacity) VALUES
 ('Superior', 'Studio nguyên căn, 38 m², Bếp riêng, Phòng tắm riêng trong phòng, Điều hòa không khí, Smart TV, Hệ thống cách âm, Minibar, WiFi miễn phí - Ăn sáng phục vụ tại phòng - Cho thuê xe máy', 1050000.00, 4);
 
 INSERT INTO room (hotel_id, type_id, status) VALUES
-(1, 1, 'Available'),
-(1, 2, 'Available'),
-(1, 3, 'Available'),
-(2, 4, 'Available'),
-(2, 5, 'Available'),
-(2, 6, 'Available');
+(1, 1, 'available'),
+(1, 2, 'available'),
+(1, 3, 'available'),
+(2, 4, 'available'),
+(2, 5, 'available'),
+(2, 6, 'available');
 
 INSERT INTO role (name) VALUES ('STAFF'), ('MANAGER'), ('ADMIN');

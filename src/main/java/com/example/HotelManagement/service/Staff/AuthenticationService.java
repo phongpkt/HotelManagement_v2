@@ -9,6 +9,8 @@ import com.example.HotelManagement.service.Hotel.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -63,5 +65,9 @@ public class AuthenticationService {
             e.printStackTrace();
         }
         return null;
+    }
+    public Staff findCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            return (Staff) authentication.getPrincipal();
     }
 }
