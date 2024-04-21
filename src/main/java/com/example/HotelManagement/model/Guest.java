@@ -31,8 +31,6 @@ public class Guest {
     private String email;
     @Column(name = "address")
     private String address;
-    @Column(name = "date_of_birth")
-    private Date date_of_birth;
     @OneToOne(mappedBy = "guest")
     @JsonIgnore
     private Booking booking;

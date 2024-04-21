@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:td="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            color: #333;
+        }
+        .booking-details, .guest-info, .room-info {
+            margin-bottom: 20px;
+        }
+        .booking-details table, .guest-info table, .room-info table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .booking-details th, .booking-details td,
+        .guest-info th, .guest-info td,
+        .room-info th, .room-info td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .booking-details th, .guest-info th, .room-info th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Booking Confirmation</h2>
+
+    <div class="booking-details">
+        <h3>Booking Details:</h3>
+        <table>
+            <tr>
+                <th>Check-In Date:</th>
+                <td><p th:text="${checkInDate}"></p></td>
+            </tr>
+            <tr>
+                <th>Check-Out Date:</th>
+                <td><p th:text="${checkOutDate}"></p></td>
+            </tr>
+            <tr>
+                <th>Total Price:</th>
+                <td><p style="color: red; font-weight: bold" th:text="${totalPrice}"></p></td>
+            </tr>
+        </table>
+    </div>
+    <div class="guest-info">
+        <h3>Guest Information:</h3>
+        <table>
+            <tr>
+                <th>Name:</th>
+                <td><p th:text="${ guest.firstName } + ' ' + ${ guest.lastName }"></p></td>
+            </tr>
+            <tr>
+                <th>Phone Number:</th>
+                <td><p th:text="${ guest.phone }"></p></td>
+            </tr>
+            <tr>
+                <th>Email:</th>
+                <td><p th:text="${ guest.email }"></p></td>
+            </tr>
+            <tr>
+                <th>Address:</th>
+                <td><p th:text="${ guest.address }"></p></td>
+            </tr>
+            <tr>
+                <th>Date of Birth:</th>
+                <td><p th:text="${ guest.date_of_birth }"></p></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="room-info">
+        <h3>Room Information:</h3>
+        <table>
+            <tr>
+                <th>Hotel Name:</th>
+                <td><p th:text="${ hotelName }"></p></td>
+            </tr>
+            <tr>
+                <th>Hotel Address:</th>
+                <td><p th:text="${ hotelAddress }"></p></td>
+            </tr>
+            <tr>
+                <th>Hotel Phone:</th>
+                <td><p th:text="${ hotelPhone }"></p></td>
+            </tr>
+            <tr>
+                <th>Room Type:</th>
+                <td><p style="color: red; font-weight: bold" th:text="${ roomType }"></p></td>
+            </tr>
+            <tr>
+                <th>Room Description:</th>
+                <td><p th:text="${ roomDescription }"></p></td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

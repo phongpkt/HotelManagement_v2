@@ -29,8 +29,6 @@ import java.util.Optional;
 public class BookingController {
     @Autowired
     private BookingService bookingService;
-    @Autowired
-    private EmailService emailService;
 
     @Operation(summary = "Get a book by ID")
     @ApiResponses(value = {
@@ -173,7 +171,6 @@ public class BookingController {
                         new ResponseObject("invalid", "The room is unavailable", "")
                 );
             }
-//            emailService.sendEmail(newBooking.getEmail(), book);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "successfully", book)
             );

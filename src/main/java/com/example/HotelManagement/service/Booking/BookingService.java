@@ -36,6 +36,9 @@ public class BookingService {
     private RoomService roomService;
     @Autowired
     private GuestRepository guestRepository;
+    @Autowired
+    private EmailService emailService;
+
 
     public List<Booking> findAll(){
         return bookingRepository.findAll();
@@ -77,7 +80,9 @@ public class BookingService {
                 room.get().setStatus(RoomStatus.reserved);
                 Guest guest = getGuest(newBooking);
                 book.setGuest(guest);
+
                 guestRepository.save(guest);
+                emailService.sendEmail(newBooking.getEmail(), book);
                 return bookingRepository.save(book);
             }
         }
@@ -151,7 +156,6 @@ public class BookingService {
         guest.setFirstName(newBooking.getFirstName());
         guest.setLastName(newBooking.getLastName());
         guest.setPhone(newBooking.getPhone());
-        guest.setDate_of_birth(newBooking.getDate_of_birth());
         guest.setAddress(newBooking.getAddress());
         guest.setEmail(newBooking.getEmail());
         return guest;
