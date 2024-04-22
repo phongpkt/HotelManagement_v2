@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:td="http://www.w3.org/1999/xhtml" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +8,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
+            font-size: large;
+            line-height: 1.5;
         }
         .container {
             max-width: 600px;
@@ -41,9 +42,12 @@
     </style>
 </head>
 <body>
+<h2>Booking Confirmed!</h2>
+<p>We are pleased to inform you that your request has been received and confirmed. Please check the information
+    below:</p>
+<p>If you have any questions don't hesitate to contact us.</p>
+<p style="font-weight: bold">Thank you for choosing Narcissus.</p>
 <div class="container">
-    <h2>Booking Confirmation</h2>
-
     <div class="booking-details">
         <h3>Booking Details:</h3>
         <table>
@@ -80,10 +84,6 @@
                 <th>Address:</th>
                 <td><p th:text="${ guest.address }"></p></td>
             </tr>
-            <tr>
-                <th>Date of Birth:</th>
-                <td><p th:text="${ guest.date_of_birth }"></p></td>
-            </tr>
         </table>
     </div>
 
@@ -91,16 +91,12 @@
         <h3>Room Information:</h3>
         <table>
             <tr>
-                <th>Hotel Name:</th>
+                <th>Hotel:</th>
                 <td><p th:text="${ hotelName }"></p></td>
             </tr>
             <tr>
-                <th>Hotel Address:</th>
+                <th>Address:</th>
                 <td><p th:text="${ hotelAddress }"></p></td>
-            </tr>
-            <tr>
-                <th>Hotel Phone:</th>
-                <td><p th:text="${ hotelPhone }"></p></td>
             </tr>
             <tr>
                 <th>Room Type:</th>

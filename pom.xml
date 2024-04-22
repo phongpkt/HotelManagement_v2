@@ -93,7 +93,7 @@
 			<artifactId>thymeleaf-spring5</artifactId>
 			<version>3.0.15.RELEASE</version>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

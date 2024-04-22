@@ -4,18 +4,10 @@ import com.example.HotelManagement.model.Booking;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Properties;
 
 @Service
@@ -57,7 +49,7 @@ public class EmailService {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
 
             message.setFrom(new InternetAddress(email));
-            message.setSubject("Booking Confirmation");
+            message.setSubject("Narcissus - Booking Confirmation");
             message.setContent(thymeleafService.getContent(booking), CONTENT_TYPE_TEXT_HTML);
             Transport.send(message);
         } catch (MessagingException e) {

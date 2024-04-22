@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Entity
 @Getter
 @Setter
@@ -21,10 +19,8 @@ public class Guest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "guest_id")
     private long id;
-    @Column(name = "firstName")
-    private String firstName;
-    @Column(name = "lastName")
-    private String lastName;
+    @Column(name = "full_name")
+    private String fullName;
     @Column(name = "phone")
     private String phone;
     @Column(name = "email")

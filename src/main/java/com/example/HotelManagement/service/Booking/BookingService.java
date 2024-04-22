@@ -153,8 +153,7 @@ public class BookingService {
     }
     private Guest getGuest(guestBookingDTO newBooking){
         Guest guest = new Guest();
-        guest.setFirstName(newBooking.getFirstName());
-        guest.setLastName(newBooking.getLastName());
+        guest.setFullName(newBooking.getFullName());
         guest.setPhone(newBooking.getPhone());
         guest.setAddress(newBooking.getAddress());
         guest.setEmail(newBooking.getEmail());

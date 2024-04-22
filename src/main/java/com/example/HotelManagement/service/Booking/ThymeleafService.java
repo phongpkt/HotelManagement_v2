@@ -23,7 +23,7 @@ public class ThymeleafService {
     private static final String UTF_8 = "UTF-8";
     private static final String TEMPLATE_NAME = "mail-template";
 
-    private static TemplateEngine templateEngine;
+    private static final TemplateEngine templateEngine;
 
     static {
         templateEngine = emailTemplateEngine();
@@ -62,7 +62,6 @@ public class ThymeleafService {
         context.setVariable("guest", booking.getGuest());
         context.setVariable("hotelName", booking.getRoom().getHotel().getName());
         context.setVariable("hotelAddress", booking.getRoom().getHotel().getAddress());
-        context.setVariable("hotelPhone", booking.getRoom().getHotel().getPhone());
         context.setVariable("roomType", booking.getRoom().getType().getName());
         context.setVariable("roomDescription", booking.getRoom().getType().getDescription());
 

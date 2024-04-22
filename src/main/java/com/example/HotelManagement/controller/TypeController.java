@@ -3,7 +3,6 @@ package com.example.HotelManagement.controller;
 import com.example.HotelManagement.exceptions.ResponseObject;
 import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.RoomType;
-import com.example.HotelManagement.service.GalleryService;
 import com.example.HotelManagement.service.Room.TypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,7 +25,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/roomType")
-@CrossOrigin("http://localhost:5173/")
 public class TypeController {
     @Autowired
     private TypeService typeService;
