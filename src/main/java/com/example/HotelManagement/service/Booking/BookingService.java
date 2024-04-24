@@ -155,7 +155,6 @@ public class BookingService {
         Guest guest = new Guest();
         guest.setFullName(newBooking.getFullName());
         guest.setPhone(newBooking.getPhone());
-        guest.setAddress(newBooking.getAddress());
         guest.setEmail(newBooking.getEmail());
         return guest;
     }

@@ -19,6 +19,4 @@ public class guestBookingDTO {
     private String fullName;
     private String phone;
     private String email;
-    private String address;
-    private Date date_of_birth;
 }

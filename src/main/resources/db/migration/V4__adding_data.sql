@@ -12,10 +12,29 @@ INSERT INTO room_type (name, description, price_per_night, capacity) VALUES
 
 INSERT INTO room (hotel_id, type_id, status) VALUES
 (1, 1, 'available'),
-(1, 2, 'available'),
+(2, 2, 'available'),
 (1, 3, 'available'),
-(2, 4, 'available'),
-(2, 5, 'available'),
+(1, 4, 'available'),
+(1, 5, 'available'),
 (2, 6, 'available');
+
+INSERT INTO gallery (image_url, image_format, image_type, room_type_id) VALUES
+('src/main/resources/static/images/deluxe.jpg','image/jpeg', 'ACCOMMODATIONS', 1),
+('src/main/resources/static/images/Superior.jpg','image/jpeg', 'ACCOMMODATIONS', 2),
+('src/main/resources/static/images/Superior City.png','image/png', 'ACCOMMODATIONS', 3),
+('src/main/resources/static/images/Standard.png','image/png', 'ACCOMMODATIONS', 4),
+('src/main/resources/static/images/Luxury Studio.png','image/png', 'ACCOMMODATIONS', 5),
+('src/main/resources/static/images/duplex.png','image/png', 'ACCOMMODATIONS', 6);
+
+UPDATE room_type
+SET preview_image_id =
+    CASE
+        WHEN type_id = 1 THEN 1
+        WHEN type_id = 2 THEN 2
+        WHEN type_id = 3 THEN 3
+        WHEN type_id = 4 THEN 4
+        WHEN type_id = 5 THEN 5
+        WHEN type_id = 6 THEN 6
+    END;
 
 INSERT INTO role (name) VALUES ('STAFF'), ('MANAGER'), ('ADMIN');

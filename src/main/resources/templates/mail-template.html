@@ -70,7 +70,7 @@
         <table>
             <tr>
                 <th>Name:</th>
-                <td><p th:text="${ guest.firstName } + ' ' + ${ guest.lastName }"></p></td>
+                <td><p th:text="${ guest.fullName }"></p></td>
             </tr>
             <tr>
                 <th>Phone Number:</th>
@@ -79,10 +79,6 @@
             <tr>
                 <th>Email:</th>
                 <td><p th:text="${ guest.email }"></p></td>
-            </tr>
-            <tr>
-                <th>Address:</th>
-                <td><p th:text="${ guest.address }"></p></td>
             </tr>
         </table>
     </div>

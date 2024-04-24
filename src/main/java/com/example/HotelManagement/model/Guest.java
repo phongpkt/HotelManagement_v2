@@ -25,8 +25,6 @@ public class Guest {
     private String phone;
     @Column(name = "email")
     private String email;
-    @Column(name = "address")
-    private String address;
     @OneToOne(mappedBy = "guest")
     @JsonIgnore
     private Booking booking;

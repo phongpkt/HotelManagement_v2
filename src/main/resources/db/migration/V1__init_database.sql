@@ -55,8 +55,6 @@ CREATE TABLE IF NOT EXISTS payment (
 CREATE TABLE IF NOT EXISTS guest (
     guest_id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     full_name VARCHAR(255) NOT NULL,
-    date_of_birth DATE,
-    address VARCHAR(255),
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(20)
 );
