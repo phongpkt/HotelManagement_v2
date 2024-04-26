@@ -14,11 +14,7 @@ import com.example.HotelManagement.service.Room.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,44 +65,40 @@ public class BookingService {
     public Booking save(guestBookingDTO newBooking){
         Optional<Room> room = roomService.findById(newBooking.getRoom());
         if (room.isPresent()){
-            if(room.get().getStatus() == RoomStatus.available){
-                Booking book = new Booking();
-                book.setCheckInDate(newBooking.getCheckInDate());
-                book.setCheckOutDate(newBooking.getCheckOutDate());
-                book.setRoom(room.get());
-                RoomType type = room.get().getType();
-                book.setTotalPrice(calculate_Price(type, newBooking.getCheckInDate(), newBooking.getCheckOutDate()));
-                book.setStatus(BookingStatus.booked);
-                room.get().setStatus(RoomStatus.reserved);
-                Guest guest = getGuest(newBooking);
-                book.setGuest(guest);
+            Booking book = new Booking();
+            book.setCheckInDate(newBooking.getCheckInDate());
+            book.setCheckOutDate(newBooking.getCheckOutDate());
+            book.setRoom(room.get());
+            book.setTotalPrice(newBooking.getTotalPrice());
+            book.setStatus(BookingStatus.booked);
+            Guest guest = getGuest(newBooking);
+            book.setGuest(guest);
 
-                guestRepository.save(guest);
-                emailService.sendEmail(newBooking.getEmail(), book);
-                return bookingRepository.save(book);
-            }
+            guestRepository.save(guest);
+            emailService.sendEmailToGuest(newBooking.getEmail(), book); //Guest
+            emailService.sendEmailToHost(book); //Host
+            return bookingRepository.save(book);
         }
         return null;
     }
     public Booking update(BookingDTO newBooking, Long id){
         Booking updatedBook = bookingRepository.getBookingById(id);
-            updatedBook.setCheckInDate(newBooking.getCheckInDate());
-            updatedBook.setCheckOutDate(newBooking.getCheckOutDate());
-            //previous room
-            Room room = updatedBook.getRoom();
-                if (room.getStatus() == RoomStatus.reserved){
-                    room.setStatus(RoomStatus.available);
-                }
-            //update room
-            Optional<Room> update_room = roomService.findById(newBooking.getRoom());
-                if (update_room.isPresent()){
-                    if(update_room.get().getStatus() == RoomStatus.available){
-                        updatedBook.setRoom(update_room.get());
-                        RoomType type = update_room.get().getType();
-                        updatedBook.setTotalPrice(calculate_Price(type, newBooking.getCheckInDate(), newBooking.getCheckOutDate()));
-                    }
-                    update_room.get().setStatus(RoomStatus.reserved);
-                }
+        updatedBook.setCheckInDate(newBooking.getCheckInDate());
+        updatedBook.setCheckOutDate(newBooking.getCheckOutDate());
+        //previous room
+        Room room = updatedBook.getRoom();
+        if (room.getStatus() == RoomStatus.reserved) {
+            room.setStatus(RoomStatus.available);
+        }
+        //update room
+        Optional<Room> update_room = roomService.findById(newBooking.getRoom());
+        if (update_room.isPresent()) {
+            if (update_room.get().getStatus() == RoomStatus.available) {
+                updatedBook.setRoom(update_room.get());
+                RoomType type = update_room.get().getType();
+            }
+            update_room.get().setStatus(RoomStatus.reserved);
+        }
         return bookingRepository.save(updatedBook);
     }
     public Booking updateBookStatus(Long id, String statusString){
@@ -129,8 +121,9 @@ public class BookingService {
         }
         return false;
     }
-    public void deleteBookingsByCheckOutDateAndStatus() {
-        List<Booking> bookings = bookingRepository.findByCheckOutDateBeforeAndStatus();
+
+    public void deleteBookingsByStatus() {
+        List<Booking> bookings = bookingRepository.findByStatus();
         for (Booking booking : bookings) {
             bookingRepository.delete(booking);
         }
@@ -144,12 +137,6 @@ public class BookingService {
         } catch (IllegalArgumentException e) {
             return null;
         }
-    }
-    private double calculate_Price(RoomType room, Date checkInDate, Date checkOutDate){
-        LocalDate localCheckInDate = checkInDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate localCheckOutDate = checkOutDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        long numberOfDays = ChronoUnit.DAYS.between(localCheckInDate, localCheckOutDate);
-        return numberOfDays * room.getPricePerNight();
     }
     private Guest getGuest(guestBookingDTO newBooking){
         Guest guest = new Guest();

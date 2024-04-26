@@ -30,7 +30,7 @@ public class EmailService {
     }
 
     @Async
-    public void sendEmail(String to, Booking booking) {
+    public void sendEmailToGuest(String to, Booking booking) {
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.starttls.enable", "true");
@@ -50,7 +50,35 @@ public class EmailService {
 
             message.setFrom(new InternetAddress(email));
             message.setSubject("Narcissus - Booking Confirmation");
-            message.setContent(thymeleafService.getContent(booking), CONTENT_TYPE_TEXT_HTML);
+            message.setContent(thymeleafService.getContentForGuest(booking), CONTENT_TYPE_TEXT_HTML);
+            Transport.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Async
+    public void sendEmailToHost(Booking booking) {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", port);
+
+        Session session = Session.getInstance(props,
+                new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(email, password);
+                    }
+                });
+        Message message = new MimeMessage(session);
+        try {
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("Narcissus84leduan@gmail.com"));
+
+            message.setFrom(new InternetAddress(email));
+            message.setSubject("Narcissus - Booking Confirmation");
+            message.setContent(thymeleafService.getContentForHost(booking), CONTENT_TYPE_TEXT_HTML);
             Transport.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();

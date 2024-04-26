@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.UnsupportedMediaTypeException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +22,15 @@ import java.util.List;
 public class StorageService {
 
     private static final Logger LOG = LoggerFactory.getLogger(StorageService.class);
-
     private final Storage storage;
     private final String bucketName;
+    private final String root;
 
     public StorageService(final Storage storage,
                           @Value("${app.config.bucket-name}") final String bucketName) {
         this.storage = storage;
         this.bucketName = bucketName;
+        this.root = "https://storage.googleapis.com/" + bucketName + "/";
     }
 
     public byte[] getFile(String directory, String fileName) throws IOException {
@@ -52,14 +54,10 @@ public class StorageService {
 
     public List<String> getImagePaths() {
         List<String> imagePaths = new ArrayList<>();
-
-        // Lấy danh sách các Blob trong bucket
         Iterable<Blob> blobs = storage.list(bucketName).iterateAll();
-
-        // Lặp qua từng Blob và tạo đường dẫn đến ảnh
         for (Blob blob : blobs) {
             String fileName = blob.getName();
-            String imagePath = "https://storage.googleapis.com/" + bucketName + "/" + fileName;
+            String imagePath = root + fileName;
             imagePaths.add(imagePath);
         }
 
@@ -83,5 +81,26 @@ public class StorageService {
                 file.getBytes());
 
         return objectName;
+    }
+
+    public byte[] getFileFromStorage(String imageUrl) throws IOException {
+        String fileName = extractFileNameFromUrl(imageUrl);
+        BlobId blobId = BlobId.of(bucketName, fileName);
+        Blob blob = storage.get(blobId);
+        if (blob != null) {
+            return blob.getContent();
+        }
+        return null;
+    }
+
+    private String extractFileNameFromUrl(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            String path = url.getPath();
+            return path.substring(path.lastIndexOf('/') + 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

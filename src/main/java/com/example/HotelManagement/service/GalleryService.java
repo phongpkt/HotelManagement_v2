@@ -32,6 +32,8 @@ public class GalleryService {
     public List<Gallery> getImagesByRoom(Long id) throws IOException{
         return galleryRepository.findByRoomType(id);
     }
+
+    //TODO: Save to gcs buckets
     public Gallery save(String typeString, String fileName, MultipartFile multipartFile) throws IOException {
         Gallery image = new Gallery();
         Path uploadPath = Paths.get(root);
@@ -53,6 +55,7 @@ public class GalleryService {
         return galleryRepository.save(image);
     }
 
+    //TODO: Save to gcs buckets
     public Gallery updatePreviewImageForRoom(RoomType roomType, String fileName, String format, MultipartFile multipartFile) throws IOException {
         Gallery image = new Gallery();
         Path uploadPath = Paths.get(root);
@@ -82,6 +85,7 @@ public class GalleryService {
         return galleryRepository.save(image);
     }
 
+    //TODO: Save to gcs buckets
     public void saveRoomTypeImages(RoomType roomType, String fileName, String format, MultipartFile multipartFile) throws IOException {
         Gallery image = new Gallery();
         Path uploadPath = Paths.get(root);

@@ -1,5 +1,6 @@
 package com.example.HotelManagement.controller;
 
+import com.example.HotelManagement.gcstorage.StorageService;
 import com.example.HotelManagement.model.Gallery;
 import com.example.HotelManagement.service.GalleryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,19 +10,22 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/gallery")
-@CrossOrigin("http://localhost:5173/")
 public class GalleryController {
     @Autowired
     private GalleryService galleryService;
+    @Autowired
+    private StorageService storageService;
 
     @Operation(summary = "Get all gallery images")
     @ApiResponses(value = {
@@ -42,13 +46,6 @@ public class GalleryController {
         return new ResponseEntity<>(imagesList, HttpStatus.OK);
     }
 
-    @GetMapping("/getImage")
-    public ResponseEntity<?> getImages(@RequestParam("url") String imageURL, @RequestParam("format") String format) throws IOException {
-        byte[] imageBytes = galleryService.getImage(imageURL);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .contentType(MediaType.valueOf(format))
-                    .body(imageBytes);
-    }
     @GetMapping("/find/{id}")
     public ResponseEntity<List<Gallery>> findImagesByRoom(@PathVariable("id") Long id) throws IOException {
         List<Gallery> imagesList = galleryService.getImagesByRoom(id);

@@ -16,7 +16,7 @@ public class ApplicationRouter {
     @Autowired
     private StorageService storageService;
 
-    @GetMapping("/{directory}/{fileName}") //directory: test
+    @GetMapping("/{directory}/{fileName}") //directory: test, images
     public ResponseEntity<byte[]> getFile(@PathVariable("directory") String directory, @PathVariable("fileName") String fileName) {
         try {
             byte[] fileContent = storageService.getFile(directory, fileName);
@@ -30,7 +30,7 @@ public class ApplicationRouter {
     }
 
     @GetMapping("/images")
-    public List<String> getImages() {
+    public List<String> getAllImages() {
         return storageService.getImagePaths();
     }
 

@@ -19,12 +19,30 @@ INSERT INTO room (hotel_id, type_id, status) VALUES
 (2, 6, 'available');
 
 INSERT INTO gallery (image_url, image_format, image_type, room_type_id) VALUES
-('src/main/resources/static/images/deluxe.jpg','image/jpeg', 'ACCOMMODATIONS', 1),
-('src/main/resources/static/images/Superior.jpg','image/jpeg', 'ACCOMMODATIONS', 2),
-('src/main/resources/static/images/Superior City.png','image/png', 'ACCOMMODATIONS', 3),
-('src/main/resources/static/images/Standard.png','image/png', 'ACCOMMODATIONS', 4),
-('src/main/resources/static/images/Luxury Studio.png','image/png', 'ACCOMMODATIONS', 5),
-('src/main/resources/static/images/duplex.png','image/png', 'ACCOMMODATIONS', 6);
+('https://storage.googleapis.com/narcissus-bucket/images/deluxe.jpg','image/jpeg', 'ACCOMMODATIONS', 1),
+('https://storage.googleapis.com/narcissus-bucket/images/Superior.jpg','image/jpeg', 'ACCOMMODATIONS', 2),
+('https://storage.googleapis.com/narcissus-bucket/images/Superior%20City.png','image/png', 'ACCOMMODATIONS', 3),
+('https://storage.googleapis.com/narcissus-bucket/images/Standard.png','image/png', 'ACCOMMODATIONS', 4),
+('https://storage.googleapis.com/narcissus-bucket/images/Luxury%20Studio.png','image/png', 'ACCOMMODATIONS', 5),
+('https://storage.googleapis.com/narcissus-bucket/images/duplex.png','image/png', 'ACCOMMODATIONS', 6),
+('https://storage.googleapis.com/narcissus-bucket/images/Deluxe/PSY05240.jpg','image/jpeg', 'ACCOMMODATIONS', 1),
+('https://storage.googleapis.com/narcissus-bucket/images/Deluxe/PSY05252.jpg','image/jpeg', 'ACCOMMODATIONS', 1),
+('https://storage.googleapis.com/narcissus-bucket/images/Deluxe/PSY05259.jpg','image/jpeg', 'ACCOMMODATIONS', 1),
+('https://storage.googleapis.com/narcissus-bucket/images/Superior/A0203212.png','image/png', 'ACCOMMODATIONS', 2),
+('https://storage.googleapis.com/narcissus-bucket/images/Superior/A0203218.png','image/png', 'ACCOMMODATIONS', 2),
+('https://storage.googleapis.com/narcissus-bucket/images/Superior/A0203413.png','image/png', 'ACCOMMODATIONS', 2),
+('https://storage.googleapis.com/narcissus-bucket/images/Superior/PSY05149.jpg','image/jpeg', 'ACCOMMODATIONS', 3),
+('https://storage.googleapis.com/narcissus-bucket/images/Superior/PSY05167.jpg','image/jpeg', 'ACCOMMODATIONS', 3),
+('https://storage.googleapis.com/narcissus-bucket/images/Superior/PSY05188.jpg','image/jpeg', 'ACCOMMODATIONS', 3),
+('https://storage.googleapis.com/narcissus-bucket/images/Standard/A0203353.png','image/png', 'ACCOMMODATIONS', 4),
+('https://storage.googleapis.com/narcissus-bucket/images/Standard/A0203359.png','image/png', 'ACCOMMODATIONS', 4),
+('https://storage.googleapis.com/narcissus-bucket/images/Standard/A0203362.png','image/png', 'ACCOMMODATIONS', 4),
+('https://storage.googleapis.com/narcissus-bucket/images/Luxury%20Studio%20Room/A0203251.png','image/png', 'ACCOMMODATIONS', 5),
+('https://storage.googleapis.com/narcissus-bucket/images/Luxury%20Studio%20Room/A0203272.png','image/png', 'ACCOMMODATIONS', 5),
+('https://storage.googleapis.com/narcissus-bucket/images/Luxury%20Studio%20Room/A0203341.png','image/png', 'ACCOMMODATIONS', 5),
+('https://storage.googleapis.com/narcissus-bucket/images/duplex/A0203266.png','image/png', 'ACCOMMODATIONS', 6),
+('https://storage.googleapis.com/narcissus-bucket/images/duplex/A0203302.png','image/png', 'ACCOMMODATIONS', 6),
+('https://storage.googleapis.com/narcissus-bucket/images/duplex/A0203329.png','image/png', 'ACCOMMODATIONS', 6);
 
 UPDATE room_type
 SET preview_image_id =

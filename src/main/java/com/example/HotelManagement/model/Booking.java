@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -25,11 +24,11 @@ public class Booking {
     @Column(name = "booking_id")
     private long id;
     @Column(name = "checkInDate")
-    private Date checkInDate;
+    private String checkInDate;
     @Column(name = "checkOutDate")
-    private Date checkOutDate;
+    private String checkOutDate;
     @Column(name = "totalPrice")
-    private double totalPrice;
+    private String totalPrice;
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private BookingStatus status;

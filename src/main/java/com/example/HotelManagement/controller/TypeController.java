@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.ErrorResponse;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -248,22 +249,32 @@ public class TypeController {
     }
 
     @GetMapping("/getImage/{id}")
-    public ResponseEntity<?> getImages(@PathVariable Long id) throws IOException {
+    public ResponseEntity<String> getImages(@PathVariable Long id) throws IOException {
         Optional<RoomType> roomType = typeService.findById(id);
         if (roomType.isPresent()) {
             if (roomType.get().getPreviewImage() != null) {
-                String imageURL = roomType.get().getPreviewImage().getImage_url();
-                String imageFormat = roomType.get().getPreviewImage().getImage_format();
-                byte[] imageBytes = typeService.getImage(imageURL);
-                return ResponseEntity.status(HttpStatus.OK)
-                        .contentType(MediaType.valueOf(imageFormat))
-                        .body(imageBytes);
+                return ResponseEntity.status(HttpStatus.OK).body(roomType.get().getPreviewImage().getImage_url());
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ResponseObject("error", "No data found", "")
-        );
+        return ResponseEntity.notFound().build();
     }
+
+    private byte[] getImageBytesFromUrl(String imageUrl) throws IOException {
+        URL url = new URL(imageUrl);
+        try (InputStream inputStream = url.openStream()) {
+            return inputStream.readAllBytes();
+        }
+    }
+
+
+    private String getFileExtension(String fileName) {
+        int lastDotIndex = fileName.lastIndexOf(".");
+        if (lastDotIndex > 0) {
+            return fileName.substring(lastDotIndex + 1).toLowerCase();
+        }
+        return "";
+    }
+
     @Operation(summary = "Delete a room type resource")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully delete resource",

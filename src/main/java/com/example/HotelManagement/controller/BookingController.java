@@ -7,7 +7,6 @@ import com.example.HotelManagement.dto.statusRequest;
 import com.example.HotelManagement.exceptions.ResponseObject;
 import com.example.HotelManagement.model.Booking;
 import com.example.HotelManagement.service.Booking.BookingService;
-import com.example.HotelManagement.service.Booking.EmailService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -255,6 +254,6 @@ public class BookingController {
     @Scheduled(cron = "0 0 0 * * ?") // Chạy vào lúc 00:00:00 mỗi ngày
     @Hidden
     public void deleteByDateAndStatus() {
-        bookingService.deleteBookingsByCheckOutDateAndStatus();
+        bookingService.deleteBookingsByStatus();
     }
 }

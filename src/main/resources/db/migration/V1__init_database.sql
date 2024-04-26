@@ -37,9 +37,9 @@ CREATE TABLE IF NOT EXISTS staff (
 CREATE TABLE IF NOT EXISTS booking (
     booking_id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     room_id BIGINT NOT NULL,
-    check_in_date DATE,
-    check_out_date DATE,
-    total_price DECIMAL(10, 2),
+    check_in_date VARCHAR(255),
+    check_out_date VARCHAR(255),
+    total_price VARCHAR(255),
     FOREIGN KEY (room_id) REFERENCES room(room_id)
 );
 

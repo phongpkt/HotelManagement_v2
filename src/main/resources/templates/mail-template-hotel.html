@@ -1,26 +1,18 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Xác Nhận Đặt Phòng</title>
+    <title>Booking Confirmation</title>
     <style>
         body {
           font-family: Arial, sans-serif;
-          font-size: medium;
+          font-size: large;
           line-height: 1.5;
         }
-
-        .header {
-          padding: 0 5%;
-        }
-
-        .footer p {
-          font-size: 0.8rem;
-        }
         .container {
-          max-width: 600px;
+          max-width: 680px;
           margin: 0 auto;
           padding: 20px;
           border: 1px solid #ccc;
@@ -50,7 +42,6 @@
           padding: 8px;
           text-align: left;
           border-bottom: 1px solid #ddd;
-          font-weight: 500;
         }
         .booking-details th,
         .guest-info th,
@@ -60,27 +51,21 @@
     </style>
 </head>
 <body>
-<div class="header">
-    <h2>Xác Nhận Đặt Phòng!</h2>
-    <p>
-        Chúng tôi rất vui mừng thông báo rằng yêu cầu của bạn đã được nhận và
-        xác nhận. Vui lòng kiểm tra thông tin dưới đây:
-    </p>
-</div>
+<h2>Booking Mới</h2>
 <div class="container">
     <div class="booking-details">
-        <h3>Chi Tiết Đặt Phòng</h3>
+        <h3>Thông tin chi tiết</h3>
         <table>
             <tr>
-                <th>Ngày Nhận Phòng:</th>
+                <th>Ngày Check-in:</th>
                 <td><p th:text="${checkInDate}"></p></td>
             </tr>
             <tr>
-                <th>Ngày Trả Phòng:</th>
+                <th>Ngày Check-out:</th>
                 <td><p th:text="${checkOutDate}"></p></td>
             </tr>
             <tr>
-                <th>Tổng Giá Tiền:</th>
+                <th>Tổng tiền:</th>
                 <td>
                     <p
                             style="color: red; font-weight: bold"
@@ -91,14 +76,14 @@
         </table>
     </div>
     <div class="guest-info">
-        <h3>Thông Tin Khách Hàng:</h3>
+        <h3>Thông tin khách:</h3>
         <table>
             <tr>
-                <th>Tên:</th>
+                <th>Họ và tên:</th>
                 <td><p th:text="${ guest.fullName }"></p></td>
             </tr>
             <tr>
-                <th>Số Điện Thoại:</th>
+                <th>Số điện thoại:</th>
                 <td><p th:text="${ guest.phone }"></p></td>
             </tr>
             <tr>
@@ -109,18 +94,18 @@
     </div>
 
     <div class="room-info">
-        <h3>Thông Tin Phòng:</h3>
+        <h3>Thông tin phòng:</h3>
         <table>
             <tr>
-                <th>Khách Sạn:</th>
+                <th>Khách sạn:</th>
                 <td><p th:text="${ hotelName }"></p></td>
             </tr>
             <tr>
-                <th>Địa Chỉ:</th>
+                <th>Địa chỉ:</th>
                 <td><p th:text="${ hotelAddress }"></p></td>
             </tr>
             <tr>
-                <th>Loại Phòng:</th>
+                <th>Loại phòng:</th>
                 <td>
                     <p
                             style="color: red; font-weight: bold"
@@ -129,21 +114,10 @@
                 </td>
             </tr>
             <tr>
-                <th>Mô Tả Phòng:</th>
+                <th>Mô tả phòng:</th>
                 <td><p th:text="${ roomDescription }"></p></td>
             </tr>
         </table>
-    </div>
-    <div class="footer">
-        <p>cảm ơn vì đã tin tưởng Narcissus</p>
-        <p>Nếu bạn có bất cứ vấn đề hay thắc mắc nào, vui lòng liên hệ</p>
-        <p>
-            Email:
-            <a href="mailto:narcissus84leduan@gmail.com"
-            >narcissus84leduan@gmail.com</a
-            >
-        </p>
-        <p>Số điện thoại: <a href="tel:0337248276">0337248276</a></p>
     </div>
 </div>
 </body>

@@ -10,10 +10,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 @Service
 public class ThymeleafService {
@@ -21,8 +19,8 @@ public class ThymeleafService {
     private static final String MAIL_TEMPLATE_PREFIX = "/templates/";
     private static final String MAIL_TEMPLATE_SUFFIX = ".html";
     private static final String UTF_8 = "UTF-8";
-    private static final String TEMPLATE_NAME = "mail-template";
-
+    private static final String GUEST_TEMPLATE_NAME = "mail-template";
+    private static final String HOST_TEMPLATE_NAME = "mail-template-hotel";
     private static final TemplateEngine templateEngine;
 
     static {
@@ -52,12 +50,12 @@ public class ThymeleafService {
         return templateResolver;
     }
 
-    public String getContent(Booking booking) {
+    public String getContentForGuest(Booking booking) {
         final Context context = new Context();
 
         context.setVariable("booking", booking);
-        context.setVariable("checkInDate", formatDate(booking.getCheckInDate()));
-        context.setVariable("checkOutDate", formatDate(booking.getCheckInDate()));
+        context.setVariable("checkInDate", booking.getCheckInDate());
+        context.setVariable("checkOutDate", booking.getCheckOutDate());
         context.setVariable("totalPrice", formatCurrency(booking.getTotalPrice()));
         context.setVariable("guest", booking.getGuest());
         context.setVariable("hotelName", booking.getRoom().getHotel().getName());
@@ -65,23 +63,30 @@ public class ThymeleafService {
         context.setVariable("roomType", booking.getRoom().getType().getName());
         context.setVariable("roomDescription", booking.getRoom().getType().getDescription());
 
-        return templateEngine.process(TEMPLATE_NAME, context);
+        return templateEngine.process(GUEST_TEMPLATE_NAME, context);
     }
 
-    private String formatDate(Date dateString) {
-        SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("EEE dd MMM yyyy");
+    public String getContentForHost(Booking booking) {
+        final Context context = new Context();
 
-        try {
-            Date inputDate = inputFormat.parse(String.valueOf(dateString));
-            return outputFormat.format(inputDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
+        context.setVariable("booking", booking);
+        context.setVariable("checkInDate", booking.getCheckInDate());
+        context.setVariable("checkOutDate", booking.getCheckInDate());
+        context.setVariable("totalPrice", formatCurrency(booking.getTotalPrice()));
+        context.setVariable("guest", booking.getGuest());
+        context.setVariable("hotelName", booking.getRoom().getHotel().getName());
+        context.setVariable("hotelAddress", booking.getRoom().getHotel().getAddress());
+        context.setVariable("roomType", booking.getRoom().getType().getName());
+        context.setVariable("roomDescription", booking.getRoom().getType().getDescription());
+
+        return templateEngine.process(HOST_TEMPLATE_NAME, context);
     }
-    private String formatCurrency(double amount) {
-        DecimalFormat formatter = new DecimalFormat("#,###");
-        return formatter.format(amount) + " vnd";
+
+    private String formatCurrency(String amount) {
+        int intValue = Integer.parseInt(amount);
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        formatter.setGroupingUsed(true);
+        formatter.setCurrency(java.util.Currency.getInstance("VND"));
+        return formatter.format(intValue);
     }
 }

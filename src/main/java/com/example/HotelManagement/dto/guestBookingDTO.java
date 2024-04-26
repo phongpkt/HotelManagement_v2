@@ -5,17 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class guestBookingDTO {
     private long room;
-    private Date checkInDate;
-    private Date checkOutDate;
-
+    private String checkInDate;
+    private String checkOutDate;
+    private String totalPrice;
     private String fullName;
     private String phone;
     private String email;
