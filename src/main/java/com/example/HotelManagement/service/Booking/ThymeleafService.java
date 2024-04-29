@@ -71,7 +71,7 @@ public class ThymeleafService {
 
         context.setVariable("booking", booking);
         context.setVariable("checkInDate", booking.getCheckInDate());
-        context.setVariable("checkOutDate", booking.getCheckInDate());
+        context.setVariable("checkOutDate", booking.getCheckOutDate());
         context.setVariable("totalPrice", formatCurrency(booking.getTotalPrice()));
         context.setVariable("guest", booking.getGuest());
         context.setVariable("hotelName", booking.getRoom().getHotel().getName());

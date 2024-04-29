@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,8 +27,13 @@ public class GalleryService {
     @Autowired
     private TypeRepository typeRepository;
 
-    public List<Gallery> getAllImages() throws IOException {
-        return galleryRepository.findAll();
+    public List<String> getAllImages() throws IOException {
+        List<Gallery> galleries = galleryRepository.findAll();
+        List<String> image_url = new ArrayList<>();
+        for (Gallery gallery : galleries){
+            image_url.add(gallery.getImage_url());
+        }
+        return image_url;
     }
     public List<Gallery> getImagesByRoom(Long id) throws IOException{
         return galleryRepository.findByRoomType(id);

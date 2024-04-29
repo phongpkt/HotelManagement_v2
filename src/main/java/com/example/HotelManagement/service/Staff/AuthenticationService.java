@@ -5,16 +5,19 @@ import com.example.HotelManagement.dto.RegisterUserDto;
 import com.example.HotelManagement.model.Role;
 import com.example.HotelManagement.model.Staff;
 import com.example.HotelManagement.repository.StaffRepository;
+import com.example.HotelManagement.security.JwtService;
 import com.example.HotelManagement.service.Hotel.HotelService;
+import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 public class AuthenticationService {
@@ -22,6 +25,8 @@ public class AuthenticationService {
     private StaffRepository userRepository;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private JwtService jwtService;
     @Autowired
     private HotelService hotelService;
     @Autowired
@@ -66,8 +71,17 @@ public class AuthenticationService {
         }
         return null;
     }
-    public Staff findCurrentUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            return (Staff) authentication.getPrincipal();
+    public Staff findCurrentUser(String token){
+        try {
+            String username = jwtService.extractUsername(token);
+            Optional<Staff> staff = userRepository.findByEmail(username);
+            if (staff.isEmpty()) {
+                throw new UsernameNotFoundException("User not found with username: " + username);
+            }
+            return staff.get();
+        } catch (Exception e) {
+            // Xảy ra lỗi khi giải mã hoặc tìm người dùng
+            throw new BadCredentialsException("Invalid token");
+        }
     }
 }

@@ -30,16 +30,15 @@ public class GalleryController {
     @Operation(summary = "Get all gallery images")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Gallery.class)),}),
+                    content = {@Content(mediaType = "application/json")}),
             @ApiResponse(responseCode = "204", description = "No data found",
                     content = {@Content(mediaType = "application/json")}),
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = {@Content(mediaType = "application/json")})
     })
     @GetMapping("/find")
-    public ResponseEntity<List<Gallery>> findAll() throws IOException {
-        List<Gallery> imagesList = galleryService.getAllImages();
+    public ResponseEntity<List<String>> findAll() throws IOException {
+        List<String> imagesList = galleryService.getAllImages();
         if (imagesList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

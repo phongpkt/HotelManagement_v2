@@ -39,9 +39,9 @@ public class AuthenticationController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<Object> userProfile() {
+    public ResponseEntity<Object> userProfile(@RequestHeader("authentication") String token) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("success", "User logged in", service.findCurrentUser())
+                new ResponseObject("success", "User logged in", service.findCurrentUser(token))
         );
     }
 }

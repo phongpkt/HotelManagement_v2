@@ -36,15 +36,7 @@ public class StorageService {
     public byte[] getFile(String directory, String fileName) throws IOException {
         BlobId blobId = BlobId.of(bucketName, directory + "/" + fileName);
         String fileExtension = getFileExtension(fileName);
-        MediaType contentType;
-
-        if ("png".equalsIgnoreCase(fileExtension)) {
-            contentType = MediaType.IMAGE_PNG;
-        } else if ("jpg".equalsIgnoreCase(fileExtension) || "jpeg".equalsIgnoreCase(fileExtension)) {
-            contentType = MediaType.IMAGE_JPEG;
-        } else {
-            throw new UnsupportedMediaTypeException("Unsupported image format: " + fileExtension);
-        }
+        MediaType contentType = MediaType.IMAGE_JPEG;
         Blob blob = storage.get(blobId);
         if (blob != null) {
             return blob.getContent();
