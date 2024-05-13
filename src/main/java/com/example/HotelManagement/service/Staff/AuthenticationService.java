@@ -7,7 +7,6 @@ import com.example.HotelManagement.model.Staff;
 import com.example.HotelManagement.repository.StaffRepository;
 import com.example.HotelManagement.security.JwtService;
 import com.example.HotelManagement.service.Hotel.HotelService;
-import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -80,7 +79,6 @@ public class AuthenticationService {
             }
             return staff.get();
         } catch (Exception e) {
-            // Xảy ra lỗi khi giải mã hoặc tìm người dùng
             throw new BadCredentialsException("Invalid token");
         }
     }
