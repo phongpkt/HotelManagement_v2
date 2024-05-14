@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GalleryService {
@@ -38,6 +39,14 @@ public class GalleryService {
     public List<Gallery> getImagesByRoom(Long id) throws IOException{
         return galleryRepository.findByRoomType(id);
     }
+    public List<String> getImagesByType(String type) throws IOException{
+        ImageTypes imageType = ImageTypes.valueOf(type);
+        List<Gallery> galleries = galleryRepository.findByImageType(imageType);
+        return galleries.stream()
+                .map(Gallery::getImage_url)
+                .collect(Collectors.toList());
+    }
+
 
     //TODO: Save to gcs buckets
     public Gallery save(String typeString, String fileName, MultipartFile multipartFile) throws IOException {
