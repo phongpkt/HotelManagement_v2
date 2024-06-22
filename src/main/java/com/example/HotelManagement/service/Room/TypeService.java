@@ -1,5 +1,6 @@
 package com.example.HotelManagement.service.Room;
 
+import com.example.HotelManagement.dto.CreateRoomTypeDTO;
 import com.example.HotelManagement.model.Gallery;
 import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.RoomType;
@@ -29,7 +30,6 @@ public class TypeService {
     public Optional<RoomType> findById(Long id){
         return typeRepository.findById(id);
     }
-
     public Hotel findHotelByRoom(Long id) {
         return typeRepository.findHotelByRoom(id);
     }
@@ -43,8 +43,13 @@ public class TypeService {
         return typeRepository.findAll(hasCapacityGreaterThan(capacity));
     }
 
-    public RoomType save(RoomType newType) {
-        return typeRepository.save(newType);
+    public RoomType save(CreateRoomTypeDTO newType) {
+        RoomType newRoom = new RoomType();
+        newRoom.setName(newType.getName());
+        newRoom.setDescription(newType.getDescription());
+        newRoom.setCapacity(newType.getCapacity());
+        newRoom.setPricePerNight(newType.getPricePerNight());
+        return typeRepository.save(newRoom);
     }
     public RoomType update(RoomType newType, Long id){
         RoomType updatedType = typeRepository.findById(id).map(type -> {
@@ -61,16 +66,25 @@ public class TypeService {
         return updatedType;
     }
 
-    public RoomType updatePreviewImage(Long id, String fileName, String format, MultipartFile multipartFile) throws IOException {
-        Optional<RoomType> updatedType = typeRepository.findById(id);
-        if (updatedType.isPresent()) {
-            Gallery image = galleryService.updatePreviewImageForRoom(updatedType.get(), fileName, format, multipartFile);
-            updatedType.get().setPreviewImage(image);
-            typeRepository.save(updatedType.get());
-            return updatedType.get();
+    public RoomType updatePreviewImage(Long roomId, Long imageId) {
+        Optional<RoomType> optionalRoomType = typeRepository.findById(roomId);
+        Optional<Gallery> optionalGallery = galleryService.findById(imageId);
+
+        if (optionalRoomType.isPresent() && optionalGallery.isPresent()) {
+            RoomType roomType = optionalRoomType.get();
+            Gallery gallery = optionalGallery.get();
+
+            // Set the preview image of the RoomType
+            roomType.setPreviewImage(gallery);
+            gallery.setRoomType(roomType);
+
+            // Save updated RoomType entity
+            return typeRepository.save(roomType);
         }
-        return null;
+
+        throw new RuntimeException("Room type or gallery not found with ids: " + roomId + ", " + imageId);
     }
+
 
     public RoomType saveRoomTypeImages(Long id, String fileName, String format, MultipartFile multipartFile) throws IOException {
         Optional<RoomType> updatedType = typeRepository.findById(id);

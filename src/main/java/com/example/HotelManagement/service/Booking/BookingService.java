@@ -75,8 +75,8 @@ public class BookingService {
             book.setGuest(guest);
 
             guestRepository.save(guest);
-            emailService.sendEmailToGuest(newBooking.getEmail(), book); //Guest
-            emailService.sendEmailToHost(book); //Host
+//            emailService.sendEmailToGuest(newBooking.getEmail(), book); //Guest
+//            emailService.sendEmailToHost(book); //Host
             return bookingRepository.save(book);
         }
         return null;
@@ -85,6 +85,13 @@ public class BookingService {
         Booking updatedBook = bookingRepository.getBookingById(id);
         updatedBook.setCheckInDate(newBooking.getCheckInDate());
         updatedBook.setCheckOutDate(newBooking.getCheckOutDate());
+        updatedBook.setTotalPrice(newBooking.getTotalPrice());
+        for (BookingStatus status : BookingStatus.values()){
+            if (status.name().equalsIgnoreCase(newBooking.getStatus())){
+                updatedBook.setStatus(status);
+                return bookingRepository.save(updatedBook);
+            }
+        }
         //previous room
         Room room = updatedBook.getRoom();
         if (room.getStatus() == RoomStatus.reserved) {
@@ -99,17 +106,8 @@ public class BookingService {
             }
             update_room.get().setStatus(RoomStatus.reserved);
         }
+
         return bookingRepository.save(updatedBook);
-    }
-    public Booking updateBookStatus(Long id, String statusString){
-        Booking updatedBook = bookingRepository.getBookingById(id);
-        for (BookingStatus status : BookingStatus.values()){
-            if (status.name().equalsIgnoreCase(statusString)){
-                updatedBook.setStatus(status);
-                return bookingRepository.save(updatedBook);
-            }
-        }
-        return null;
     }
 
     public boolean delete(Long id) {

@@ -1,5 +1,6 @@
 package com.example.HotelManagement.service.Staff;
 
+import com.example.HotelManagement.dto.updateStaffDTO;
 import com.example.HotelManagement.enums.StaffRole;
 import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.Staff;
@@ -59,18 +60,17 @@ public class StaffService {
         Optional<Staff> foundResource = staffRepository.findByEmail(staff.getEmail().trim());
         return foundResource.isPresent();
     }
-    public Staff update(Staff newStaff, Long id){
-        Staff updatedStaff = staffRepository.findById(id).map(staff -> {
-            staff.setFirstName(newStaff.getFirstName());
-            staff.setLastName(newStaff.getLastName());
-            staff.setEmail(newStaff.getEmail());
-            staff.setPhone(newStaff.getPhone());
-            staff.setPassword(newStaff.getPassword());
-            return staffRepository.save(staff);
-        }).orElseGet(() -> {
-            newStaff.setId(id);
-            return staffRepository.save(newStaff);
-        });
+    public Staff update(updateStaffDTO newStaff, Long id){
+        Staff updatedStaff = staffRepository.findById(id)
+                .map(staff -> {
+                    // Update fields from newStaff DTO
+                    staff.setFirstName(newStaff.getFirstName());
+                    staff.setLastName(newStaff.getLastName());
+                    staff.setEmail(newStaff.getEmail());
+                    staff.setPhone(newStaff.getPhone());
+                    return staffRepository.save(staff); // Save updated staff entity
+                })
+                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + id));
         return updatedStaff;
     }
 

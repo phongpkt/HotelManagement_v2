@@ -1,5 +1,6 @@
 package com.example.HotelManagement.controller;
 
+import com.example.HotelManagement.dto.updateStaffDTO;
 import com.example.HotelManagement.exceptions.ResponseObject;
 import com.example.HotelManagement.model.Staff;
 import com.example.HotelManagement.service.Staff.StaffService;
@@ -221,7 +222,7 @@ public class StaffController {
                             schema = @Schema(implementation = ResponseObject.class)) })
     })
     @PutMapping("/update/{id}")
-    public ResponseEntity<ResponseObject> update(@RequestBody Staff newStaff, @PathVariable Long id) {
+    public ResponseEntity<ResponseObject> update(@RequestBody updateStaffDTO newStaff, @PathVariable Long id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "successfully", staffService.update(newStaff, id))

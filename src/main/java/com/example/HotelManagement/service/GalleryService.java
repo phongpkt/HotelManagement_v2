@@ -5,6 +5,9 @@ import com.example.HotelManagement.model.Gallery;
 import com.example.HotelManagement.model.RoomType;
 import com.example.HotelManagement.repository.GalleryRepository;
 import com.example.HotelManagement.repository.TypeRepository;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,12 +20,14 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class GalleryService {
-    private final String root = "src/main/resources/static/images/";
-    private final Path filePath = Paths.get(root);
+    private final String root = "https://storage.googleapis.com/";
+    private final String bucket_name = "narcissus-bucket";
+    private final String folder = "test";
     @Autowired
     private GalleryRepository galleryRepository;
     @Autowired
@@ -46,25 +51,19 @@ public class GalleryService {
                 .map(Gallery::getImage_url)
                 .collect(Collectors.toList());
     }
+    public Optional<Gallery> findById(Long id){
+        return galleryRepository.findById(id);
+    }
 
-
-    //TODO: Save to gcs buckets
-    public Gallery save(String typeString, String fileName, MultipartFile multipartFile) throws IOException {
+    public Gallery saveImage(String typeString, String imageUrl, String imageFormat) {
         Gallery image = new Gallery();
-        Path uploadPath = Paths.get(root);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            Path filePath = uploadPath.resolve(fileName);
-            Files.copy(inputStream, filePath, StandardCopyOption.ATOMIC_MOVE);
-        } catch (IOException ioe) {
-            throw new IOException("Could not save image file: " + fileName, ioe);
-        }
-        image.setImage_url(uploadPath + "/" + fileName);
+        image.setImage_url(imageUrl);
+        image.setImage_format(imageFormat);
+
         for (ImageTypes type : ImageTypes.values()) {
             if (type.name().equalsIgnoreCase(typeString)) {
                 image.setImage_type(type);
+                break;
             }
         }
         return galleryRepository.save(image);
@@ -82,7 +81,7 @@ public class GalleryService {
         if (existingImage != null) {
             roomType.setPreviewImage(null);
             String existingImagePath = existingImage.getImage_url();
-            deleteImage(existingImage, existingImagePath); //delete existing image
+            deleteByFileName(existingImagePath); //delete existing image
         }
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
@@ -130,11 +129,8 @@ public class GalleryService {
         }
     }
 
-    public void deleteImage(Gallery existingImage, String imageDirectory) throws IOException {
-        Path existingImagePath = Paths.get(imageDirectory);
-        if (Files.exists(existingImagePath)) {
-            Files.delete(existingImagePath);
-            galleryRepository.delete(existingImage);
-        }
+    public void deleteByFileName(String fileName) {
+        String imageUrl = root + bucket_name + "/" + folder + "/" + fileName;
+        galleryRepository.deleteByImageUrl(imageUrl);
     }
 }

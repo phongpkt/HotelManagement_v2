@@ -1,8 +1,11 @@
 package com.example.HotelManagement.controller;
 
+import com.example.HotelManagement.dto.CreateRoomTypeDTO;
 import com.example.HotelManagement.exceptions.ResponseObject;
+import com.example.HotelManagement.gcstorage.StorageService;
 import com.example.HotelManagement.model.Hotel;
 import com.example.HotelManagement.model.RoomType;
+import com.example.HotelManagement.service.GalleryService;
 import com.example.HotelManagement.service.Room.TypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,7 +32,10 @@ import java.util.Optional;
 public class TypeController {
     @Autowired
     private TypeService typeService;
-
+    @Autowired
+    private GalleryService galleryService;
+    @Autowired
+    private StorageService storageService;
 
     @Operation(summary = "Get a room type by ID")
     @ApiResponses(value = {
@@ -167,7 +173,7 @@ public class TypeController {
                             schema = @Schema(implementation = ResponseObject.class)) })
     })
     @PostMapping("/insert")
-    public ResponseEntity<ResponseObject> save(@RequestBody RoomType newType) {
+    public ResponseEntity<ResponseObject> save(@RequestBody CreateRoomTypeDTO newType) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "successfully", typeService.save(newType))
@@ -212,14 +218,19 @@ public class TypeController {
     @PatchMapping("/update/{id}")
     public ResponseEntity<ResponseObject> updatePreviewImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable Long id) {
         try {
-            String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-            String format = multipartFile.getContentType();
+            String imageUrl = storageService.uploadFile(multipartFile);
+
+            String imageFormat = multipartFile.getContentType();
+            Long imageId = galleryService.saveImage("ACCOMMODATIONS", imageUrl, imageFormat).getId();
+
+            typeService.updatePreviewImage(id, imageId);
+
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "successfully", typeService.updatePreviewImage(id, fileName, format, multipartFile))
+                    new ResponseObject("ok", "Successfully updated room preview image", null)
             );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new ResponseObject("error", "An error occurred while updating - Please check your input", "")
+                    new ResponseObject("error", "An error occurred while updating - Please check your input", null)
             );
         }
     }

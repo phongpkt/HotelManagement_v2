@@ -3,18 +3,14 @@ package com.example.HotelManagement.gcstorage;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.UnsupportedMediaTypeException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +31,6 @@ public class StorageService {
 
     public byte[] getFile(String directory, String fileName) throws IOException {
         BlobId blobId = BlobId.of(bucketName, directory + "/" + fileName);
-        String fileExtension = getFileExtension(fileName);
-        MediaType contentType = MediaType.IMAGE_JPEG;
         Blob blob = storage.get(blobId);
         if (blob != null) {
             return blob.getContent();
@@ -52,7 +46,6 @@ public class StorageService {
             String imagePath = root + fileName;
             imagePaths.add(imagePath);
         }
-
         return imagePaths;
     }
 
@@ -64,35 +57,18 @@ public class StorageService {
         return "";
     }
 
-    public String uploadFile(MultipartFile file, String folderName) throws IOException {
-        Storage storage = StorageOptions.getDefaultInstance().getService();
-        String objectName = folderName + "/" + file.getOriginalFilename();
+    public String uploadFile(MultipartFile file) throws IOException {
+        String objectName = "test" + "/" + file.getOriginalFilename();
         Blob blob = storage.create(
                 Blob.newBuilder(bucketName, objectName)
                         .build(),
                 file.getBytes());
-
-        return objectName;
+        return root + objectName;
     }
 
-    public byte[] getFileFromStorage(String imageUrl) throws IOException {
-        String fileName = extractFileNameFromUrl(imageUrl);
-        BlobId blobId = BlobId.of(bucketName, fileName);
-        Blob blob = storage.get(blobId);
-        if (blob != null) {
-            return blob.getContent();
-        }
-        return null;
-    }
-
-    private String extractFileNameFromUrl(String imageUrl) {
-        try {
-            URL url = new URL(imageUrl);
-            String path = url.getPath();
-            return path.substring(path.lastIndexOf('/') + 1);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    public Boolean deleteFile(String fileName) {
+        String objectName = "test" + "/" + fileName;
+        BlobId blobId = BlobId.of(bucketName, objectName);
+        return storage.delete(blobId);
     }
 }

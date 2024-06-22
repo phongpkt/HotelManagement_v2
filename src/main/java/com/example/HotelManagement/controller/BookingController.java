@@ -200,36 +200,6 @@ public class BookingController {
             );
         }
     }
-    @Operation(summary = "Update a book status")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated resource",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Booking.class)), }),
-            @ApiResponse(responseCode = "406", description = "Invalid Request - Please check your input",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ResponseObject.class)) }),
-            @ApiResponse(responseCode = "500", description = "An error occurred while updating",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ResponseObject.class)) })
-    })
-    @PatchMapping("/update/status/{id}")
-    public ResponseEntity<ResponseObject> updateStatus(@RequestBody statusRequest status, @PathVariable Long id) {
-        try {
-            Booking updatedBook = bookingService.updateBookStatus(id, status.getStatus());
-            if (updatedBook==null){
-                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                        new ResponseObject("invalid", "Status is invalid", "")
-                );
-            }
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "successfully", updatedBook)
-            );
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new ResponseObject("error", "An error occurred while updating", "")
-            );
-        }
-    }
     @Operation(summary = "Delete a booking resource")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully delete resource",
