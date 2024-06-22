@@ -1,8 +1,11 @@
 <h1>Hotel Management</h1>
 <strong>Description: </strong>
 Our hotel management project is a system built on the Spring Boot platform, using MySQL database to store information. We apply design patterns and technologies such as Spring Security, JWT, and Redis Cache to optimize security and performance. The system provides APIs through Swagger, integrates with Google Cloud Platform, and provides email sending features.
-<hr>
+<br><br>
 
+**Visit our website at: *Narcissus.com* or *Narcissus.com.vn***
+
+<hr>
 <h3>Project Structure</h3>
 <ol>
   <li><strong>config:</strong> Application configuration, Web configuration, Security configutation, Storage configuration</li>
