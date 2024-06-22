@@ -75,8 +75,8 @@ public class BookingService {
             book.setGuest(guest);
 
             guestRepository.save(guest);
-//            emailService.sendEmailToGuest(newBooking.getEmail(), book); //Guest
-//            emailService.sendEmailToHost(book); //Host
+            emailService.sendEmailToGuest(newBooking.getEmail(), book); //Guest
+            emailService.sendEmailToHost(book); //Host
             return bookingRepository.save(book);
         }
         return null;

@@ -58,7 +58,7 @@ public class StorageService {
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
-        String objectName = "test" + "/" + file.getOriginalFilename();
+        String objectName = "images" + "/" + file.getOriginalFilename();
         Blob blob = storage.create(
                 Blob.newBuilder(bucketName, objectName)
                         .build(),
@@ -67,7 +67,7 @@ public class StorageService {
     }
 
     public Boolean deleteFile(String fileName) {
-        String objectName = "test" + "/" + fileName;
+        String objectName = "images" + "/" + fileName;
         BlobId blobId = BlobId.of(bucketName, objectName);
         return storage.delete(blobId);
     }
